@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<package version="2.0" xmlns="http://pear.php.net/dtd/package-2.0"
+    xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd">
+
+  <name>usb</name>
+  <channel>pecl.php.net</channel>
+
+  <summary>libusb wrapper</summary>
+
+  <description>
+libusb wrapper
+  </description>
+
+  <lead>
+    <name>Keng-ichi Ahagon</name>
+    <user>oasynnoum</user>
+    <email>k.ahagon@n-3.so</email>
+    <active>yes</active>
+  </lead>
+
+  <date>2013-03-02</date>
+  <version>
+    <release>0.0.1</release>
+    <api>0.0.1</api>
+  </version>
+  <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+  </stability>
+
+  <license uri="http://php.net/license" filesource="LICENSE">PHP</license>
+
+  <notes>
+none
+  </notes>
+
+  <contents>
+    <dir name="/">
+      <file role='doc' name='EXPERIMENTAL'/>
+      <file role='doc' name='CREDITS'/>
+      <file role='src' name='config.m4'/>
+      <file role='src' name='usb.dsp'/>
+      <file role='src' name='config.w32'/>
+      <file role='src' name='usb.c'/>
+      <file role='src' name='php_usb.h'/>
+      <dir name="tests">
+        <file role='test' name='usb_init.phpt'/>
+        <file role='test' name='usb_exit.phpt'/>
+        <file role='test' name='usb_get_device_list.phpt'/>
+        <file role='test' name='usb_free_device_list.phpt'/>
+        <file role='test' name='usb_open.phpt'/>
+        <file role='test' name='usb_close.phpt'/>
+        <file role='test' name='usb_get_bus_number.phpt'/>
+        <file role='test' name='usb_get_device_address.phpt'/>
+        <file role='test' name='usb_get_device_speed.phpt'/>
+        <file role='test' name='usb_get_max_packet_size.phpt'/>
+        <file role='test' name='usb_get_max_iso_packet_size.phpt'/>
+        <file role='test' name='usb_ref_device.phpt'/>
+        <file role='test' name='usb_unref_device.phpt'/>
+        <file role='test' name='usb_open_device_with_vid_pid.phpt'/>
+        <file role='test' name='usb_get_device.phpt'/>
+        <file role='test' name='usb_get_configuration.phpt'/>
+        <file role='test' name='usb_set_configuration.phpt'/>
+        <file role='test' name='usb_claim_interface.phpt'/>
+        <file role='test' name='usb_release_interface.phpt'/>
+        <file role='test' name='usb_set_interface_alt_setting.phpt'/>
+        <file role='test' name='usb_clear_halt.phpt'/>
+        <file role='test' name='usb_reset_device.phpt'/>
+        <file role='test' name='usb_kernel_driver_active.phpt'/>
+        <file role='test' name='usb_detach_kernel_driver.phpt'/>
+        <file role='test' name='usb_attach_kernel_driver.phpt'/>
+        <file role='test' name='usb_has_capability.phpt'/>
+        <file role='test' name='usb_error_name.phpt'/>
+        <file role='test' name='usb_get_device_descriptor.phpt'/>
+        <file role='test' name='usb_get_active_config_descriptor.phpt'/>
+        <file role='test' name='usb_get_config_descriptor.phpt'/>
+        <file role='test' name='usb_get_config_descriptor_by_value.phpt'/>
+        <file role='test' name='usb_free_config_descriptor.phpt'/>
+        <file role='test' name='usb_get_string_descriptor_ascii.phpt'/>
+        <file role='test' name='usb_get_descriptor.phpt'/>
+        <file role='test' name='usb_get_string_descriptor.phpt'/>
+        <file role='test' name='usb_control_transfer.phpt'/>
+        <file role='test' name='usb_bulk_transfer.phpt'/>
+        <file role='test' name='usb_interrupt_transfer.phpt'/>
+      </dir>
+    </dir>
+  </contents>
+
+  <dependencies>
+    <required>
+      <php>
+        <min>4.0.0</min>
+      </php>
+      <pearinstaller>
+        <min>1.4.0a1</min>
+      </pearinstaller>
+    </required>
+  </dependencies>
+
+  <providesextension>usb</providesextension>
+
+  <extsrcrelease>
+   <configureoption name="with-usb" default="autodetect" prompt="usb installation directory?" />
+  </extsrcrelease>
+
+</package>

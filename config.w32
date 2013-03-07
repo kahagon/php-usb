@@ -1,0 +1,13 @@
+// $ Id: $
+// vim:ft=javascript
+
+ARG_WITH('usb', 'libusb wrapper', 'no');
+
+if (PHP_USB == "yes") {
+  
+  if (!CHECK_HEADER_ADD_INCLUDE("libusb.h", "CFLAGS_USB")) {
+	ERROR("usb: header 'libusb.h' not found");
+  }
+  EXTENSION("usb", "usb.c");
+  AC_DEFINE("HAVE_USB", 1, "usb support");
+}

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
+<package>
+
+  <name>usb</name>
+  <summary>libusb wrapper</summary>
+  <description>
+libusb wrapper
+  </description>
+
+  <license>PHP</license>
+
+  <configureoptions>
+   <configureoption name="with-usb" default="autodetect" prompt="usb installation directory?" />
+  </configureoptions>
+
+  <maintainers>
+    <maintainer>
+      <user>oasynnoum</user>
+      <name>Keng-ichi Ahagon</name>
+      <email>k.ahagon@n-3.so</email>
+      <role>lead</role>
+    </maintainer>
+  </maintainers>
+
+  <release>
+    <version>0.0.1</version>
+    <state>alpha</state>
+    <notes>unknown</notes>
+    <date>2013-03-02</date>
+  </release>
+  <changelog>
+
+  </changelog>
+  <deps>
+    <dep type="php" rel="ge" version="4.0.0"/>
+  </deps>
+
+  <filelist>
+    <dir name="/">
+      <file role='doc' name='EXPERIMENTAL'/>
+      <file role='doc' name='CREDITS'/>
+      <file role='src' name='config.m4'/>
+      <file role='src' name='usb.dsp'/>
+      <file role='src' name='config.w32'/>
+      <file role='src' name='usb.c'/>
+      <file role='src' name='php_usb.h'/>
+      <dir name="tests">
+        <file role='test' name='usb_init.phpt'/>
+        <file role='test' name='usb_exit.phpt'/>
+        <file role='test' name='usb_get_device_list.phpt'/>
+        <file role='test' name='usb_free_device_list.phpt'/>
+        <file role='test' name='usb_open.phpt'/>
+        <file role='test' name='usb_close.phpt'/>
+        <file role='test' name='usb_get_bus_number.phpt'/>
+        <file role='test' name='usb_get_device_address.phpt'/>
+        <file role='test' name='usb_get_device_speed.phpt'/>
+        <file role='test' name='usb_get_max_packet_size.phpt'/>
+        <file role='test' name='usb_get_max_iso_packet_size.phpt'/>
+        <file role='test' name='usb_ref_device.phpt'/>
+        <file role='test' name='usb_unref_device.phpt'/>
+        <file role='test' name='usb_open_device_with_vid_pid.phpt'/>
+        <file role='test' name='usb_get_device.phpt'/>
+        <file role='test' name='usb_get_configuration.phpt'/>
+        <file role='test' name='usb_set_configuration.phpt'/>
+        <file role='test' name='usb_claim_interface.phpt'/>
+        <file role='test' name='usb_release_interface.phpt'/>
+        <file role='test' name='usb_set_interface_alt_setting.phpt'/>
+        <file role='test' name='usb_clear_halt.phpt'/>
+        <file role='test' name='usb_reset_device.phpt'/>
+        <file role='test' name='usb_kernel_driver_active.phpt'/>
+        <file role='test' name='usb_detach_kernel_driver.phpt'/>
+        <file role='test' name='usb_attach_kernel_driver.phpt'/>
+        <file role='test' name='usb_has_capability.phpt'/>
+        <file role='test' name='usb_error_name.phpt'/>
+        <file role='test' name='usb_get_device_descriptor.phpt'/>
+        <file role='test' name='usb_get_active_config_descriptor.phpt'/>
+        <file role='test' name='usb_get_config_descriptor.phpt'/>
+        <file role='test' name='usb_get_config_descriptor_by_value.phpt'/>
+        <file role='test' name='usb_free_config_descriptor.phpt'/>
+        <file role='test' name='usb_get_string_descriptor_ascii.phpt'/>
+        <file role='test' name='usb_get_descriptor.phpt'/>
+        <file role='test' name='usb_get_string_descriptor.phpt'/>
+        <file role='test' name='usb_control_transfer.phpt'/>
+        <file role='test' name='usb_bulk_transfer.phpt'/>
+        <file role='test' name='usb_interrupt_transfer.phpt'/>
+      </dir>
+    </dir>
+  </filelist>
+</package>

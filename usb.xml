@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension name="usb" version="0.0.1">
+    <summary>libusb wrapper</summary>
+    <description>libusb wrapper</description>
+    <maintainers>
+        <maintainer>
+            <user>oasynnoum</user>
+            <name>Keng-ichi Ahagon</name>
+            <email>k.ahagon@n-3.so</email>
+            <role>lead</role>
+        </maintainer>
+    </maintainers>
+    <license>PHP</license>
+    <release>
+        <version>0.0.1</version>
+        <date>2013-03-02</date>
+        <state>alpha</state>
+        <notes></notes>
+    </release>
+
+    <deps language="c">
+        <with defaults="$HOME/include" testfile="libusb-1.0/libusb.h">libusb install</with>
+        <header name="libusb.h" />
+        <lib name="usb-1.0" platform="unix" />
+    </deps>
+
+    <constants>
+        <constant type="int" name="USB_REQUEST_GET_STATUS" value="LIBUSB_REQUEST_GET_STATUS"></constant>
+        <constant type="int" name="USB_REQUEST_CLEAR_FEATURE" value="LIBUSB_REQUEST_CLEAR_FEATURE"></constant>
+        <constant type="int" name="USB_REQUEST_SET_FEATURE" value="LIBUSB_REQUEST_SET_FEATURE"></constant>
+        <constant type="int" name="USB_REQUEST_SET_ADDRESS" value="LIBUSB_REQUEST_GET_DESCRIPTOR"></constant>
+        <constant type="int" name="USB_REQUEST_SET_DESCRIPTOR" value="LIBUSB_REQUEST_SET_DESCRIPTOR"></constant>
+        <constant type="int" name="USB_REQUEST_GET_CONFIGURATION" value="LIBUSB_REQUEST_GET_CONFIGURATION"></constant>
+        <constant type="int" name="USB_REQUEST_SET_CONFIGURATION" value="LIBUSB_REQUEST_SET_CONFIGURATION"></constant>
+        <constant type="int" name="USB_REQUEST_GET_INTERFACE" value="LIBUSB_REQUEST_GET_INTERFACE"></constant>
+        <constant type="int" name="USB_REQUEST_SET_INTERFACE" value="LIBUSB_REQUEST_SET_INTERFACE"></constant>
+        <constant type="int" name="USB_REQUEST_SYNCH_FRAME" value="LIBUSB_REQUEST_SYNCH_FRAME"></constant>
+        <constant type="int" name="USB_REQUEST_TYPE_STANDARD" value="LIBUSB_REQUEST_TYPE_STANDARD"></constant>
+        <constant type="int" name="USB_REQUEST_TYPE_CLASS" value="LIBUSB_REQUEST_TYPE_CLASS"></constant>
+        <constant type="int" name="USB_REQUEST_TYPE_VENDOR" value="LIBUSB_REQUEST_TYPE_VENDOR"></constant>
+        <constant type="int" name="USB_REQUEST_TYPE_RESERVED" value="LIBUSB_REQUEST_TYPE_RESERVED"></constant>
+        <constant type="int" name="USB_RECIPIENT_DEVICE" value="LIBUSB_RECIPIENT_DEVICE"></constant>
+        <constant type="int" name="USB_RECIPIENT_INTERFACE" value="LIBUSB_RECIPIENT_INTERFACE"></constant>
+        <constant type="int" name="USB_RECIPIENT_ENDPOINT" value="LIBUSB_RECIPIENT_ENDPOINT"></constant>
+        <constant type="int" name="USB_RECIPIENT_OTHER" value="LIBUSB_RECIPIENT_OTHER"></constant>
+        <constant type="int" name="USB_SUCCESS" value="LIBUSB_SUCCESS"></constant>
+        <constant type="int" name="USB_ERROR_IO" value="LIBUSB_ERROR_IO"></constant>
+        <constant type="int" name="USB_ERROR_INVALID_PARAM" value="LIBUSB_ERROR_INVALID_PARAM"></constant>
+        <constant type="int" name="USB_ERROR_ACCESS" value="LIBUSB_ERROR_ACCESS"></constant>
+        <constant type="int" name="USB_ERROR_NO_DEVICE" value="LIBUSB_ERROR_NO_DEVICE"></constant>
+        <constant type="int" name="USB_ERROR_NOT_FOUND" value="LIBUSB_ERROR_NOT_FOUND"></constant>
+        <constant type="int" name="USB_ERROR_BUSY" value="LIBUSB_ERROR_BUSY"></constant>
+        <constant type="int" name="USB_ERROR_TIMEOUT" value="LIBUSB_ERROR_TIMEOUT"></constant>
+        <constant type="int" name="USB_ERROR_OVERFLOW" value="LIBUSB_ERROR_OVERFLOW"></constant>
+        <constant type="int" name="USB_ERROR_PIPE" value="LIBUSB_ERROR_PIPE"></constant>
+        <constant type="int" name="USB_ERROR_INTERRUPTED" value="LIBUSB_ERROR_INTERRUPTED"></constant>
+        <constant type="int" name="USB_ERROR_NOT_SUPPORTED" value="LIBUSB_ERROR_NO_MEM"></constant>
+        <constant type="int" name="USB_ERROR_OTHER" value="LIBUSB_ERROR_OTHER"></constant>
+        <constant type="int" name="USB_CAP_HAS_CAPABILITY" value="LIBUSB_CAP_HAS_CAPABILITY"></constant>
+        <constant type="int" name="USB_SPEED_UNKNOWN" value="LIBUSB_SPEED_UNKNOWN"></constant>
+        <constant type="int" name="USB_SPEED_LOW" value="LIBUSB_SPEED_LOW"></constant>
+        <constant type="int" name="USB_SPEED_FULL" value="LIBUSB_SPEED_FULL"></constant>
+        <constant type="int" name="USB_SPEED_SUPER" value="LIBUSB_SPEED_HIGH"></constant>
+        <constant type="int" name="USB_CLASS_PER_INTERFACE" value="LIBUSB_CLASS_PER_INTERFACE"></constant>
+        <constant type="int" name="USB_CLASS_AUDIO" value="LIBUSB_CLASS_AUDIO"></constant>
+        <constant type="int" name="USB_CLASS_COMM" value="LIBUSB_CLASS_COMM"></constant>
+        <constant type="int" name="USB_CLASS_HID" value="LIBUSB_CLASS_HID"></constant>
+        <constant type="int" name="USB_CLASS_PHYSICAL" value="LIBUSB_CLASS_PHYSICAL"></constant>
+        <constant type="int" name="USB_CLASS_PRINTER" value="LIBUSB_CLASS_PRINTER"></constant>
+        <constant type="int" name="USB_CLASS_PTP" value="LIBUSB_CLASS_PTP"></constant>
+        <constant type="int" name="USB_CLASS_IMAGE" value="LIBUSB_CLASS_IMAGE"></constant>
+        <constant type="int" name="USB_CLASS_MASS_STORAGE" value="LIBUSB_CLASS_MASS_STORAGE"></constant>
+        <constant type="int" name="USB_CLASS_HUB" value="LIBUSB_CLASS_HUB"></constant>
+        <constant type="int" name="USB_CLASS_DATA" value="LIBUSB_CLASS_DATA"></constant>
+        <constant type="int" name="USB_CLASS_SMART_CARD" value="LIBUSB_CLASS_SMART_CARD"></constant>
+        <constant type="int" name="USB_CLASS_CONTENT_SECURITY" value="LIBUSB_CLASS_CONTENT_SECURITY"></constant>
+        <constant type="int" name="USB_CLASS_VIDEO" value="LIBUSB_CLASS_VIDEO"></constant>
+        <constant type="int" name="USB_CLASS_PERSONAL_HEALTHCARE" value="LIBUSB_CLASS_PERSONAL_HEALTHCARE"></constant>
+        <constant type="int" name="USB_CLASS_DIAGNOSTIC_DEVICE" value="LIBUSB_CLASS_DIAGNOSTIC_DEVICE"></constant>
+        <constant type="int" name="USB_CLASS_WIRELESS" value="LIBUSB_CLASS_WIRELESS"></constant>
+        <constant type="int" name="USB_CLASS_APPLICATION" value="LIBUSB_CLASS_APPLICATION"></constant>
+        <constant type="int" name="USB_CLASS_VENDOR_SPEC" value="LIBUSB_CLASS_VENDOR_SPEC"></constant>
+        <constant type="int" name="USB_DT_DEVICE" value="LIBUSB_DT_DEVICE"></constant>
+        <constant type="int" name="USB_DT_CONFIG" value="LIBUSB_DT_CONFIG"></constant>
+        <constant type="int" name="USB_DT_STRING" value="LIBUSB_DT_STRING"></constant>
+        <constant type="int" name="USB_DT_INTERFACE" value="LIBUSB_DT_INTERFACE"></constant>
+        <constant type="int" name="USB_DT_ENDPOINT" value="LIBUSB_DT_ENDPOINT"></constant>
+        <constant type="int" name="USB_DT_HID" value="LIBUSB_DT_HID"></constant>
+        <constant type="int" name="USB_DT_REPORT" value="LIBUSB_DT_REPORT"></constant>
+        <constant type="int" name="USB_DT_PHYSICAL" value="LIBUSB_DT_PHYSICAL"></constant>
+        <constant type="int" name="USB_DT_HUB" value="LIBUSB_DT_HUB"></constant>
+        <constant type="int" name="USB_ENDPOINT_IN" value="LIBUSB_ENDPOINT_IN"></constant>
+        <constant type="int" name="USB_ENDPOINT_OUT" value="LIBUSB_ENDPOINT_OUT"></constant>
+        <constant type="int" name="USB_TRANSFER_TYPE_CONTROL" value="LIBUSB_TRANSFER_TYPE_CONTROL"></constant>
+        <constant type="int" name="USB_TRANSFER_TYPE_ISOCHRONOUS" value="LIBUSB_TRANSFER_TYPE_ISOCHRONOUS"></constant>
+        <constant type="int" name="USB_TRANSFER_TYPE_BULK" value="LIBUSB_TRANSFER_TYPE_BULK"></constant>
+        <constant type="int" name="USB_TRANSFER_TYPE_INTERRUPT" value="LIBUSB_TRANSFER_TYPE_INTERRUPT"></constant>
+        <constant type="int" name="USB_ISO_SYNC_TYPE_NONE" value="LIBUSB_ISO_SYNC_TYPE_NONE"></constant>
+        <constant type="int" name="USB_ISO_SYNC_TYPE_ASYNC" value="LIBUSB_ISO_SYNC_TYPE_ASYNC"></constant>
+        <constant type="int" name="USB_ISO_SYNC_TYPE_ADAPTIVE" value="LIBUSB_ISO_SYNC_TYPE_ADAPTIVE"></constant>
+        <constant type="int" name="USB_ISO_SYNC_TYPE_SYNC" value="LIBUSB_ISO_SYNC_TYPE_SYNC"></constant>
+        <constant type="int" name="USB_ISO_USAGE_TYPE_DATA" value="LIBUSB_ISO_USAGE_TYPE_DATA"></constant>
+        <constant type="int" name="USB_ISO_USAGE_TYPE_FEEDBACK" value="LIBUSB_ISO_USAGE_TYPE_FEEDBACK"></constant>
+        <constant type="int" name="USB_ISO_USAGE_TYPE_IMPLICIT" value="LIBUSB_ISO_USAGE_TYPE_IMPLICIT"></constant>
+    </constants>
+
+    <resources>
+        <resource name="usb_context" payload="libusb_context" alloc="no"></resource>
+        <resource name="usb_device" payload="libusb_device" alloc="no"></resource>
+        <resource name="usb_device_handle" payload="libusb_device_handle" alloc="no"></resource>
+        <resource name="usb_device_descriptor" payload="struct libusb_device_descriptor" alloc="no"></resource>
+        <resource name="usb_endpoint_descriptor" payload="struct libusb_endpoint_descriptor" alloc="no"></resource>
+        <resource name="usb_interface_descriptor" payload="struct libusb_interface_descriptor" alloc="no"></resource>
+        <resource name="usb_interface" payload="struct libusb_interface" alloc="no"></resource>
+        <resource name="usb_config_descriptor" payload="struct libusb_config_descriptor" alloc="no"></resource>
+    </resources>
+
+    <function name="usb_init" role="public">
+        <proto>int usb_init(mixed &amp;context)</proto>
+    </function>
+    <function name="usb_exit" role="public">
+        <proto>void usb_exit(resource usb_context context)</proto>
+    </function>
+    <function name="usb_get_device_list" role="public">
+        <proto>int usb_get_device_list(resource usb_context context, mixed &amp;device_list)</proto>
+    </function>
+    <function name="usb_free_device_list" role="public">
+        <proto>void usb_free_device_list(array device_list)</proto>
+    </function>
+    <function name="usb_open" role="public">
+        <proto>int usb_open(resource usb_device device, mixed &amp;device_handle)</proto>
+    </function>
+    <function name="usb_close" role="public">
+        <proto>void usb_close(resource usb_device_handle device_handle)</proto>
+    </function>
+    <function name="usb_get_bus_number" role="public">
+        <proto>int usb_get_bus_number(resource usb_device device)</proto>
+    </function>
+    <function name="usb_get_device_address" role="public">
+        <proto>int usb_get_device_address(resource usb_device device)</proto>
+    </function>
+    <function name="usb_get_device_speed" role="public">
+        <proto>int usb_get_device_speed(resource usb_device device)</proto>
+    </function>
+    <function name="usb_get_max_packet_size" role="public">
+        <proto>int usb_get_max_packet_size(resource usb_device device, int endpoint)</proto>
+    </function>
+    <function name="usb_get_max_iso_packet_size" role="public">
+        <proto>usb_get_max_iso_packet_size(resource usb_device device, int endpoint)</proto>
+    </function>
+    <function name="usb_ref_device" role="public">
+        <proto>resource usb_device usb_ref_device(resource usb_device device)</proto>
+    </function>
+    <function name="usb_unref_device" role="public">
+        <proto>void usb_unref_device(resource usb_device device)</proto>
+    </function>
+    <function name="usb_open_device_with_vid_pid" role="public">
+        <proto>resource usb_device_handle usb_open_device_with_vid_pid(resource usb_context context, int vendor_id, int product_id)</proto>
+    </function>
+    <function name="usb_get_device" role="public">
+        <proto>resource usb_device usb_get_device(resource usb_device_handle device_handle)</proto>
+    </function>
+    <function name="usb_get_configuration" role="public">
+        <proto>int usb_get_configuration(resource usb_device_handle device_handle, mixed &amp;config)</proto>
+    </function>
+    <function name="usb_set_configuration" role="public">
+        <proto>int usb_set_configuration(resource usb_device_handle device_handle, int configuration)</proto>
+    </function>
+    <function name="usb_claim_interface" role="public">
+        <proto>int usb_claim_interface(resource usb_device_handle device_handle, int interface_number)</proto>
+    </function>
+    <function name="usb_release_interface" role="public">
+        <proto>int usb_release_interface(resource usb_device_handle device_handle, int interface_number)</proto>
+    </function>
+    <function name="usb_set_interface_alt_setting" role="public">
+        <proto>int usb_set_interface_alt_setting(resource usb_device_handle device_handle, int interface_number, int alternate_setting)</proto>
+    </function>
+    <function name="usb_clear_halt" role="public">
+        <proto>int usb_clear_halt(resource usb_device_handle device_handle, int endpoint)</proto>
+    </function>
+    <function name="usb_reset_device" role="public">
+        <proto>int usb_reset_device(resource usb_device_handle device_handle)</proto>
+    </function>
+    <function name="usb_kernel_driver_active" role="public">
+        <proto>int usb_kernel_driver_active(resource usb_device_handle device_handle, int interface_number)</proto>
+    </function>
+    <function name="usb_detach_kernel_driver" role="public">
+        <proto>int usb_detach_kernel_driver(resource usb_device_handle device_handle, int interface_number)</proto>
+    </function>
+    <function name="usb_attach_kernel_driver" role="public">
+        <proto>int usb_attach_kernel_driver(resource usb_device_handle device_handle, int interface_number)</proto>
+    </function>
+    <function name="usb_has_capability" role="public">
+        <proto>int usb_has_capability(int capability)</proto>
+    </function>
+    <function name="usb_error_name" role="public">
+        <proto>string usb_error_name(int error_code)</proto>
+    </function>
+    <function name="usb_get_device_descriptor" role="public">
+        <proto>int usb_get_device_descriptor(resource usb_device device, mixed &amp;device_descriptor)</proto>
+    </function>
+    <function name="usb_get_active_config_descriptor" role="public">
+        <proto>int usb_get_active_config_descriptor(resource usb_device device, mixed &amp;config_descriptor)</proto>
+    </function>
+    <function name="usb_get_config_descriptor" role="public">
+        <proto>int usb_get_config_descriptor(resource usb_device device, int config_index, mixed &amp;config_descriptor)</proto>
+    </function>
+    <function name="usb_get_config_descriptor_by_value" role="public">
+        <proto>usb_get_config_descriptor_by_value(resource usb_device device, int bConfigurationValue, mixed &amp;config_descriptor)</proto>
+    </function>
+    <function name="usb_free_config_descriptor" role="public">
+        <proto>void usb_free_config_descriptor(resource usb_config_descriptor config_descriptor)</proto>
+    </function>
+    <function name="usb_get_string_descriptor_ascii" role="public">
+        <proto>int usb_get_string_descriptor_ascii(resource usb_device_handle device_handle, int desc_index, mixed &amp;data)</proto>
+    </function>
+    <function name="usb_get_descriptor" role="public">
+        <proto>int usb_get_descriptor(resource usb_device_handle device_handle, int desc_type, int desc_index, mixed &amp;data)</proto>
+    </function>
+    <function name="usb_get_string_descriptor" role="public">
+        <proto>int usb_get_string_descriptor(resource usb_device_handle device_handle, int desc_index, int langid, mixed &amp;data)</proto>
+    </function>
+    <function name="usb_control_transfer" role="public">
+        <proto>int usb_control_transfer(resource usb_device_handle device_handle, int bmRequestType, int bRequest, int wValue, int wIndex, mixed &amp;data, int wLength, int timeout)</proto>
+    </function>
+    <function name="usb_bulk_transfer" role="public">
+        <proto>int usb_bulk_transfer(resource usb_device_handle device_handle, int endpoint, mixed &amp;data, int length, mixed &amp;transferred, int timeout)</proto>
+    </function>
+    <function name="usb_interrupt_transfer" role="public">
+        <proto>int usb_interrupt_transfer(resource usb_device_handle device_handle, int endpoint, mixed &amp;data, int length, mixed &amp;transferred, int timeout)</proto>
+    </function>
+<!--
+    <function name="usb_" role="public">
+        <proto></proto>
+    </function>
+    <function name="usb_" role="public">
+        <proto></proto>
+    </function>
+    <function name="usb_" role="public">
+        <proto></proto>
+    </function>
+    <function name="usb_" role="public">
+        <proto></proto>
+    </function>
+    <function name="usb_" role="public">
+        <proto></proto>
+    </function>
+-->
+</extension>
