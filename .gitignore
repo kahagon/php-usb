@@ -5,8 +5,10 @@ acinclude.m4
 aclocal.m4
 autom4te.cache
 build
+config.cache
 config.log
 config.h
+config.h.in
 config.nice
 config.status
 config.sub
@@ -18,6 +20,7 @@ iltmain.sh
 missing
 mkinstalldirs
 run-tests.php
+*.la
 *.lo
 *.o
 .deps
