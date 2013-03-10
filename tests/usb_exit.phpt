@@ -8,7 +8,19 @@ if(!extension_loaded('usb')) die('skip ');
  ?>
 --FILE--
 <?php
-echo 'OK'; // no test case for this function yet
+$context;
+
+if (USB_SUCCESS !== usb_init($context)) {
+    goto out;
+}
+
+var_dump($context);
+
+out:
+
+if ($context) usb_exit($context);
+var_dump($context);
 ?>
---EXPECT--
-OK
+--EXPECTF--
+resource(%d) of type (usb_context)
+resource(%d) of type (Unknown)

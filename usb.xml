@@ -60,7 +60,8 @@
         <constant type="int" name="USB_SPEED_UNKNOWN" value="LIBUSB_SPEED_UNKNOWN"></constant>
         <constant type="int" name="USB_SPEED_LOW" value="LIBUSB_SPEED_LOW"></constant>
         <constant type="int" name="USB_SPEED_FULL" value="LIBUSB_SPEED_FULL"></constant>
-        <constant type="int" name="USB_SPEED_SUPER" value="LIBUSB_SPEED_HIGH"></constant>
+        <constant type="int" name="USB_SPEED_HIGH" value="LIBUSB_SPEED_HIGH"></constant>
+        <constant type="int" name="USB_SPEED_SUPER" value="LIBUSB_SPEED_SUPER"></constant>
         <constant type="int" name="USB_CLASS_PER_INTERFACE" value="LIBUSB_CLASS_PER_INTERFACE"></constant>
         <constant type="int" name="USB_CLASS_AUDIO" value="LIBUSB_CLASS_AUDIO"></constant>
         <constant type="int" name="USB_CLASS_COMM" value="LIBUSB_CLASS_COMM"></constant>
@@ -146,7 +147,7 @@
         <proto>int usb_get_max_packet_size(resource usb_device device, int endpoint)</proto>
     </function>
     <function name="usb_get_max_iso_packet_size" role="public">
-        <proto>usb_get_max_iso_packet_size(resource usb_device device, int endpoint)</proto>
+        <proto>int usb_get_max_iso_packet_size(resource usb_device device, int endpoint)</proto>
     </function>
     <function name="usb_ref_device" role="public">
         <proto>resource usb_device usb_ref_device(resource usb_device device)</proto>

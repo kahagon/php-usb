@@ -198,7 +198,8 @@ PHP_MINIT_FUNCTION(usb)
 	REGISTER_LONG_CONSTANT("USB_SPEED_UNKNOWN", LIBUSB_SPEED_UNKNOWN, CONST_PERSISTENT | CONST_CS);
 	REGISTER_LONG_CONSTANT("USB_SPEED_LOW", LIBUSB_SPEED_LOW, CONST_PERSISTENT | CONST_CS);
 	REGISTER_LONG_CONSTANT("USB_SPEED_FULL", LIBUSB_SPEED_FULL, CONST_PERSISTENT | CONST_CS);
-	REGISTER_LONG_CONSTANT("USB_SPEED_SUPER", LIBUSB_SPEED_HIGH, CONST_PERSISTENT | CONST_CS);
+        REGISTER_LONG_CONSTANT("USB_SPEED_HIGH", LIBUSB_SPEED_HIGH, CONST_PERSISTENT | CONST_CS);
+        REGISTER_LONG_CONSTANT("USB_SPEED_SUPER", LIBUSB_SPEED_SUPER, CONST_PERSISTENT | CONST_CS);
 	REGISTER_LONG_CONSTANT("USB_CLASS_PER_INTERFACE", LIBUSB_CLASS_PER_INTERFACE, CONST_PERSISTENT | CONST_CS);
 	REGISTER_LONG_CONSTANT("USB_CLASS_AUDIO", LIBUSB_CLASS_AUDIO, CONST_PERSISTENT | CONST_CS);
 	REGISTER_LONG_CONSTANT("USB_CLASS_COMM", LIBUSB_CLASS_COMM, CONST_PERSISTENT | CONST_CS);
@@ -504,11 +505,7 @@ PHP_FUNCTION(usb_get_bus_number)
 	}
 	ZEND_FETCH_RESOURCE(res_device, libusb_device *, &device, device_id, "usb_device", le_usb_device);
 
-
-
-	php_error(E_WARNING, "usb_get_bus_number: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_get_bus_number(res_device));
 }
 /* }}} usb_get_bus_number */
 
@@ -529,11 +526,7 @@ PHP_FUNCTION(usb_get_device_address)
 	}
 	ZEND_FETCH_RESOURCE(res_device, libusb_device *, &device, device_id, "usb_device", le_usb_device);
 
-
-
-	php_error(E_WARNING, "usb_get_device_address: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_get_device_address(res_device));
 }
 /* }}} usb_get_device_address */
 
@@ -554,11 +547,7 @@ PHP_FUNCTION(usb_get_device_speed)
 	}
 	ZEND_FETCH_RESOURCE(res_device, libusb_device *, &device, device_id, "usb_device", le_usb_device);
 
-
-
-	php_error(E_WARNING, "usb_get_device_speed: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_get_device_speed(res_device));
 }
 /* }}} usb_get_device_speed */
 
@@ -580,36 +569,27 @@ PHP_FUNCTION(usb_get_max_packet_size)
 	}
 	ZEND_FETCH_RESOURCE(res_device, libusb_device *, &device, device_id, "usb_device", le_usb_device);
 
-
-
-	php_error(E_WARNING, "usb_get_max_packet_size: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_get_max_packet_size(res_device, endpoint));
 }
 /* }}} usb_get_max_packet_size */
 
 
-/* {{{ proto usb_get_max_iso_packet_size(resource usb_device device, int endpoint)
+/* {{{ proto int usb_get_max_iso_packet_size(resource usb_device device, int endpoint)
    */
 PHP_FUNCTION(usb_get_max_iso_packet_size)
 {
-	zval * device = NULL;
-	int device_id = -1;
-	libusb_device * res_device;
+        zval * device = NULL;
+        int device_id = -1;
+        libusb_device * res_device;
 
-	long endpoint = 0;
+        long endpoint = 0;
 
+        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &device, &endpoint) == FAILURE) {
+                return;
+        }
+        ZEND_FETCH_RESOURCE(res_device, libusb_device *, &device, device_id, "usb_device", le_usb_device);
 
-
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &device, &endpoint) == FAILURE) {
-		return;
-	}
-	ZEND_FETCH_RESOURCE(res_device, libusb_device *, &device, device_id, "usb_device", le_usb_device);
-
-
-
-	php_error(E_WARNING, "usb_get_max_iso_packet_size: not yet implemented"); RETURN_FALSE;
-
+        RETURN_LONG(libusb_get_iso_max_packet_size(res_device, endpoint));
 }
 /* }}} usb_get_max_iso_packet_size */
 
@@ -623,20 +603,14 @@ PHP_FUNCTION(usb_ref_device)
 	zval * device = NULL;
 	int device_id = -1;
 	libusb_device * res_device;
-
-
-
-
+        
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &device) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device, libusb_device *, &device, device_id, "usb_device", le_usb_device);
 
-
-
-	php_error(E_WARNING, "usb_ref_device: not yet implemented"); RETURN_FALSE;
-
-	ZEND_REGISTER_RESOURCE(return_value, return_res, le_usb_device);
+        libusb_ref_device(res_device);
+        RETURN_ZVAL(device, 1, 0);
 }
 /* }}} usb_ref_device */
 
@@ -648,19 +622,13 @@ PHP_FUNCTION(usb_unref_device)
 	zval * device = NULL;
 	int device_id = -1;
 	libusb_device * res_device;
-
-
-
-
+        
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &device) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device, libusb_device *, &device, device_id, "usb_device", le_usb_device);
 
-
-
-	php_error(E_WARNING, "usb_unref_device: not yet implemented"); RETURN_FALSE;
-
+        libusb_unref_device(res_device);
 }
 /* }}} usb_unref_device */
 
@@ -702,18 +670,12 @@ PHP_FUNCTION(usb_get_device)
 	int device_handle_id = -1;
 	libusb_device_handle * res_device_handle;
 
-
-
-
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &device_handle) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-
-
-	php_error(E_WARNING, "usb_get_device: not yet implemented"); RETURN_FALSE;
-
+        return_res = libusb_get_device(res_device_handle);
 	ZEND_REGISTER_RESOURCE(return_value, return_res, le_usb_device);
 }
 /* }}} usb_get_device */
@@ -728,19 +690,18 @@ PHP_FUNCTION(usb_get_configuration)
 	libusb_device_handle * res_device_handle;
 
 	zval * config = NULL;
-
-
+        int bConfigurationValue;
+        int result;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rz", &device_handle, &config) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
+        result = libusb_get_configuration(res_device_handle, &bConfigurationValue);
+        ZVAL_LONG(config, bConfigurationValue);
 
-
-	php_error(E_WARNING, "usb_get_configuration: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(result);
 }
 /* }}} usb_get_configuration */
 
@@ -755,18 +716,12 @@ PHP_FUNCTION(usb_set_configuration)
 
 	long configuration = 0;
 
-
-
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &device_handle, &configuration) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-
-
-	php_error(E_WARNING, "usb_set_configuration: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_set_configuration(res_device_handle, configuration));
 }
 /* }}} usb_set_configuration */
 
@@ -780,19 +735,13 @@ PHP_FUNCTION(usb_claim_interface)
 	libusb_device_handle * res_device_handle;
 
 	long interface_number = 0;
-
-
-
+        
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &device_handle, &interface_number) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-
-
-	php_error(E_WARNING, "usb_claim_interface: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_claim_interface(res_device_handle, interface_number));
 }
 /* }}} usb_claim_interface */
 
@@ -807,18 +756,12 @@ PHP_FUNCTION(usb_release_interface)
 
 	long interface_number = 0;
 
-
-
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &device_handle, &interface_number) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-
-
-	php_error(E_WARNING, "usb_release_interface: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_release_interface(res_device_handle, interface_number));
 }
 /* }}} usb_release_interface */
 
@@ -834,18 +777,12 @@ PHP_FUNCTION(usb_set_interface_alt_setting)
 	long interface_number = 0;
 	long alternate_setting = 0;
 
-
-
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rll", &device_handle, &interface_number, &alternate_setting) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-
-
-	php_error(E_WARNING, "usb_set_interface_alt_setting: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_set_interface_alt_setting(res_device_handle, interface_number, alternate_setting));
 }
 /* }}} usb_set_interface_alt_setting */
 
@@ -859,19 +796,13 @@ PHP_FUNCTION(usb_clear_halt)
 	libusb_device_handle * res_device_handle;
 
 	long endpoint = 0;
-
-
-
+        
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &device_handle, &endpoint) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-
-
-	php_error(E_WARNING, "usb_clear_halt: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_clear_halt(res_device_handle, endpoint));
 }
 /* }}} usb_clear_halt */
 
@@ -884,19 +815,12 @@ PHP_FUNCTION(usb_reset_device)
 	int device_handle_id = -1;
 	libusb_device_handle * res_device_handle;
 
-
-
-
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &device_handle) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-
-
-	php_error(E_WARNING, "usb_reset_device: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_reset_device(res_device_handle));
 }
 /* }}} usb_reset_device */
 
@@ -918,11 +842,7 @@ PHP_FUNCTION(usb_kernel_driver_active)
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-
-
-	php_error(E_WARNING, "usb_kernel_driver_active: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_kernel_driver_active(res_device_handle, interface_number));
 }
 /* }}} usb_kernel_driver_active */
 
@@ -937,18 +857,12 @@ PHP_FUNCTION(usb_detach_kernel_driver)
 
 	long interface_number = 0;
 
-
-
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &device_handle, &interface_number) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-
-
-	php_error(E_WARNING, "usb_detach_kernel_driver: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_detach_kernel_driver(res_device_handle, interface_number));
 }
 /* }}} usb_detach_kernel_driver */
 
@@ -963,18 +877,12 @@ PHP_FUNCTION(usb_attach_kernel_driver)
 
 	long interface_number = 0;
 
-
-
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &device_handle, &interface_number) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-
-
-	php_error(E_WARNING, "usb_attach_kernel_driver: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+	RETURN_LONG(libusb_attach_kernel_driver(res_device_handle, interface_number));
 }
 /* }}} usb_attach_kernel_driver */
 

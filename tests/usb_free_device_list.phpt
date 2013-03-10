@@ -8,7 +8,26 @@ if(!extension_loaded('usb')) die('skip ');
  ?>
 --FILE--
 <?php
-echo 'OK'; // no test case for this function yet
+$context; $devices;
+
+if (USB_SUCCESS !== usb_init($context)) {
+    goto out;
+}
+
+// expect that existence of an usb device.
+if (1 > usb_get_device_list($context, $devices)) {
+    goto out;
+}
+
+var_dump($devices[0]);
+
+out:
+if ($devices) usb_free_device_list($devices);
+if ($context) usb_exit($context);
+
+var_dump($devices[0]);
+
 ?>
---EXPECT--
-OK
+--EXPECTF--
+resource(%d) of type (usb_device)
+resource(%d) of type (Unknown)
