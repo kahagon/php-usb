@@ -207,10 +207,10 @@
         <proto>int usb_get_config_descriptor(resource usb_device device, int config_index, mixed &amp;config_descriptor)</proto>
     </function>
     <function name="usb_get_config_descriptor_by_value" role="public">
-        <proto>usb_get_config_descriptor_by_value(resource usb_device device, int bConfigurationValue, mixed &amp;config_descriptor)</proto>
+        <proto>int usb_get_config_descriptor_by_value(resource usb_device device, int bConfigurationValue, mixed &amp;config_descriptor)</proto>
     </function>
     <function name="usb_free_config_descriptor" role="public">
-        <proto>void usb_free_config_descriptor(resource usb_config_descriptor config_descriptor)</proto>
+        <proto>void usb_free_config_descriptor(mixed &amp;config_descriptor)</proto>
     </function>
     <function name="usb_get_string_descriptor_ascii" role="public">
         <proto>int usb_get_string_descriptor_ascii(resource usb_device_handle device_handle, int desc_index, mixed &amp;data)</proto>
