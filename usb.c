@@ -1272,19 +1272,37 @@ PHP_FUNCTION(usb_control_transfer)
 	zval * data = NULL;
 	long wLength = 0;
 	long timeout = 0;
-
-
+        int actual_transferred = 0;
+        unsigned char *buffer;
+        int buffer_length;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rllllzll", &device_handle, &bmRequestType, &bRequest, &wValue, &wIndex, &data, &wLength, &timeout) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-
-
-	php_error(E_WARNING, "usb_control_transfer: not yet implemented"); RETURN_FALSE;
-
-	RETURN_LONG(0);
+        if (wLength < 0) wLength = 4092;
+        if (bmRequestType & 1) { // device to host, read.
+            buffer_length = wLength;
+            buffer = ecalloc(1, buffer_length);
+        } else { // host to device, write.
+            if (IS_STRING == Z_TYPE_P(data)) {
+                buffer_length = Z_STRLEN_P(data);
+                buffer = estrndup(Z_STRVAL_P(data), buffer_length);
+            } else {
+                buffer_length = wLength;
+                buffer = ecalloc(1, buffer_length);
+            }
+        }
+        
+        actual_transferred = libusb_control_transfer(res_device_handle, bmRequestType, bRequest, wValue, wIndex, buffer, buffer_length, timeout);
+        if (bmRequestType & 1 && 0 < actual_transferred) {
+            ZVAL_STRINGL(data, buffer, actual_transferred, 1);
+        }
+        
+        efree(buffer);
+        
+	RETURN_LONG(actual_transferred);
 }
 /* }}} usb_control_transfer */
 

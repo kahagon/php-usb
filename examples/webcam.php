@@ -30,6 +30,17 @@ usb_get_string_descriptor_ascii($device_handle, $device_descriptor->iSerialNumbe
 usb_get_string_descriptor_ascii($device_handle, $config_descriptor->iConfiguration, $str_iConfiguration);
 var_dump($str_iManufacturer, $str_iProduct, $str_iSerialNumber, $str_iConfiguration);
 
+$fetched_configuration = null;
+$transferred = usb_control_transfer(
+        $device_handle, 
+        USB_ENDPOINT_IN, 
+        USB_REQUEST_GET_STATUS, 
+        0, 0, $fetched_configuration, -1, 2000);
+
+var_dump($transferred, $fetched_configuration);
+if ($transferred < 0) print usb_error_name($transferred) . PHP_EOL;
+
+
 out:
 if ($device_handle) usb_close($device_handle);
 if ($context) usb_exit($context);
