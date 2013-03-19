@@ -1275,16 +1275,16 @@ PHP_FUNCTION(usb_control_transfer)
         int actual_transferred = 0;
         unsigned char *buffer;
         int buffer_length;
-        int is_write;
+        int is_read;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rllllzll", &device_handle, &bmRequestType, &bRequest, &wValue, &wIndex, &data, &wLength, &timeout) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-        is_write = bmRequestType & (1 << 7);
+        is_read = bmRequestType & (1 << 7);
         if (wLength < 0) wLength = 4092;
-        if (is_write & 1) { // device to host, read.
+        if (is_read) { // device to host, read.
             buffer_length = wLength;
             buffer = ecalloc(1, buffer_length);
         } else { // host to device, write.
@@ -1298,7 +1298,7 @@ PHP_FUNCTION(usb_control_transfer)
         }
         
         actual_transferred = libusb_control_transfer(res_device_handle, bmRequestType, bRequest, wValue, wIndex, buffer, buffer_length, timeout);
-        if (is_write && 0 < actual_transferred) {
+        if (is_read && 0 < actual_transferred) {
             ZVAL_STRINGL(data, buffer, actual_transferred, 1);
         }
         
@@ -1326,16 +1326,16 @@ PHP_FUNCTION(usb_bulk_transfer)
         int buffer_length;
         int actual_transferred;
         int result;
-        int is_write;
+        int is_read;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rlzlzl", &device_handle, &endpoint, &data, &length, &transferred, &timeout) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-        is_write = endpoint & (1 << 7);
+        is_read = endpoint & (1 << 7);
         if (length < 0) length = 4092;
-        if (is_write) { // device to host, read.
+        if (is_read) { // device to host, read.
             buffer_length = length;
             buffer = ecalloc(1, buffer_length);
         } else { // host to device, write.
@@ -1349,7 +1349,7 @@ PHP_FUNCTION(usb_bulk_transfer)
         }
 
 	result = libusb_bulk_transfer(res_device_handle, endpoint, buffer, buffer_length, &actual_transferred, timeout);
-        if (is_write && 0 < actual_transferred) {
+        if (is_read && 0 < actual_transferred) {
             ZVAL_STRINGL(data, buffer, actual_transferred, 1);
         }
         
@@ -1377,16 +1377,16 @@ PHP_FUNCTION(usb_interrupt_transfer)
         int buffer_length;
         int actual_transferred;
         int result;
-        int is_write;
+        int is_read;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rlzlzl", &device_handle, &endpoint, &data, &length, &transferred, &timeout) == FAILURE) {
 		return;
 	}
 	ZEND_FETCH_RESOURCE(res_device_handle, libusb_device_handle *, &device_handle, device_handle_id, "usb_device_handle", le_usb_device_handle);
 
-        is_write = endpoint & (1 << 7);
+        is_read = endpoint & (1 << 7);
         if (length < 0) length = 4092;
-        if (is_write) { // device to host, read.
+        if (is_read) { // device to host, read.
             buffer_length = length;
             buffer = ecalloc(1, buffer_length);
         } else { // host to device, write.
@@ -1400,7 +1400,7 @@ PHP_FUNCTION(usb_interrupt_transfer)
         }
 
 	result = libusb_bulk_transfer(res_device_handle, endpoint, buffer, buffer_length, &actual_transferred, timeout);
-        if (is_write && 0 < actual_transferred) {
+        if (is_read && 0 < actual_transferred) {
             ZVAL_STRINGL(data, buffer, actual_transferred, 1);
         }
         
