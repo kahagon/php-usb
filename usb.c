@@ -1273,7 +1273,7 @@ PHP_FUNCTION(usb_control_transfer)
 	long wLength = 0;
 	long timeout = 0;
         int actual_transferred = 0;
-        unsigned char *buffer;
+        unsigned char *buffer = NULL;
         int buffer_length;
         int is_read;
 
@@ -1288,7 +1288,10 @@ PHP_FUNCTION(usb_control_transfer)
             buffer_length = wLength;
             buffer = ecalloc(1, buffer_length);
         } else { // host to device, write.
-            if (IS_STRING == Z_TYPE_P(data)) {
+            if (IS_NULL == Z_TYPE_P(data)) {
+                buffer_length = 0;
+                buffer = NULL;
+            } else if (IS_STRING == Z_TYPE_P(data)) {
                 buffer_length = Z_STRLEN_P(data);
                 buffer = estrndup(Z_STRVAL_P(data), buffer_length);
             } else {
@@ -1302,7 +1305,7 @@ PHP_FUNCTION(usb_control_transfer)
             ZVAL_STRINGL(data, buffer, actual_transferred, 1);
         }
         
-        efree(buffer);
+        if (buffer != NULL) efree(buffer);
         
 	RETURN_LONG(actual_transferred);
 }
@@ -1322,7 +1325,7 @@ PHP_FUNCTION(usb_bulk_transfer)
 	long length = 0;
 	zval * transferred = NULL;
 	long timeout = 0;
-        unsigned char *buffer;
+        unsigned char *buffer = NULL;
         int buffer_length;
         int actual_transferred;
         int result;
@@ -1339,7 +1342,10 @@ PHP_FUNCTION(usb_bulk_transfer)
             buffer_length = length;
             buffer = ecalloc(1, buffer_length);
         } else { // host to device, write.
-            if (IS_STRING == Z_TYPE_P(data)) {
+            if (IS_NULL == Z_TYPE_P(data)) {
+                buffer_length = 0;
+                buffer = NULL;
+            } else if (IS_STRING == Z_TYPE_P(data)) {
                 buffer_length = Z_STRLEN_P(data);
                 buffer = estrndup(Z_STRVAL_P(data), buffer_length);
             } else {
@@ -1352,8 +1358,9 @@ PHP_FUNCTION(usb_bulk_transfer)
         if (is_read && 0 < actual_transferred) {
             ZVAL_STRINGL(data, buffer, actual_transferred, 1);
         }
-        
-        efree(buffer);
+        ZVAL_LONG(transferred, actual_transferred);
+            
+        if (buffer != NULL) efree(buffer);
 
 	RETURN_LONG(result);
 }
@@ -1373,7 +1380,7 @@ PHP_FUNCTION(usb_interrupt_transfer)
 	long length = 0;
 	zval * transferred = NULL;
 	long timeout = 0;
-        unsigned char *buffer;
+        unsigned char *buffer = NULL;
         int buffer_length;
         int actual_transferred;
         int result;
@@ -1390,7 +1397,10 @@ PHP_FUNCTION(usb_interrupt_transfer)
             buffer_length = length;
             buffer = ecalloc(1, buffer_length);
         } else { // host to device, write.
-            if (IS_STRING == Z_TYPE_P(data)) {
+            if (IS_NULL == Z_TYPE_P(data)) {
+                buffer_length = 0;
+                buffer = NULL;
+            } else if (IS_STRING == Z_TYPE_P(data)) {
                 buffer_length = Z_STRLEN_P(data);
                 buffer = estrndup(Z_STRVAL_P(data), buffer_length);
             } else {
@@ -1403,8 +1413,9 @@ PHP_FUNCTION(usb_interrupt_transfer)
         if (is_read && 0 < actual_transferred) {
             ZVAL_STRINGL(data, buffer, actual_transferred, 1);
         }
+        ZVAL_LONG(transferred, actual_transferred);
         
-        efree(buffer);
+        if (buffer != NULL) efree(buffer);
 
 	RETURN_LONG(result);
 }
