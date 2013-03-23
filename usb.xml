@@ -197,6 +197,9 @@
     <function name="usb_error_name" role="public">
         <proto>string usb_error_name(int error_code)</proto>
     </function>
+    <function name="usb_class_name" role="public">
+        <proto>string usb_class_name(int class_code)</proto>
+    </function>
     <function name="usb_get_device_descriptor" role="public">
         <proto>int usb_get_device_descriptor(resource usb_device device, mixed &amp;device_descriptor)</proto>
     </function>
