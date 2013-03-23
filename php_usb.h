@@ -339,6 +339,15 @@ ZEND_END_ARG_INFO()
 #define usb_error_name_arg_info NULL
 #endif
 
+PHP_FUNCTION(usb_class_name);
+#if (PHP_MAJOR_VERSION >= 5)
+ZEND_BEGIN_ARG_INFO_EX(usb_class_name_arg_info, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 1)
+  ZEND_ARG_INFO(0, class_code)
+ZEND_END_ARG_INFO()
+#else /* PHP 4.x */
+#define usb_class_name_arg_info NULL
+#endif
+
 PHP_FUNCTION(usb_get_device_descriptor);
 #if (PHP_MAJOR_VERSION >= 5)
 ZEND_BEGIN_ARG_INFO_EX(usb_get_device_descriptor_arg_info, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 2)
