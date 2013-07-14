@@ -9,19 +9,19 @@ if test "$PHP_USB" != "no"; then
 
 
   if test -r "$PHP_USB/libusb-1.0/libusb.h"; then
-	PHP_USB_DIR="$PHP_USB"
+        PHP_USB_DIR="$PHP_USB"
   else
-	AC_MSG_CHECKING(for usb in default path)
-	for i in $HOME/include; do
-	  if test -r "$i/libusb-1.0/libusb.h"; then
-		PHP_USB_DIR=$i
-		AC_MSG_RESULT(found in $i)
-		break
-	  fi
-	done
-	if test "x" = "x$PHP_USB_DIR"; then
-	  AC_MSG_ERROR(not found)
-	fi
+        AC_MSG_CHECKING(for usb in default path)
+        for i in /usr/include /usr/local/include; do
+          if test -r "$i/libusb-1.0/libusb.h"; then
+                PHP_USB_DIR=$i
+                AC_MSG_RESULT(found in $i)
+                break
+          fi
+        done
+        if test "x" = "x$PHP_USB_DIR"; then
+          AC_MSG_ERROR(not found)
+        fi
   fi
 
 
@@ -29,7 +29,7 @@ if test "$PHP_USB" != "no"; then
   export CPPFLAGS="$CPPFLAGS $INCLUDES -DHAVE_USB"
   export CPPFLAGS="$OLD_CPPFLAGS"
 
-  PHP_ADD_INCLUDE($PHP_USB_DIR/include)
+  PHP_ADD_INCLUDE($PHP_USB_DIR/libusb-1.0)
   export OLD_CPPFLAGS="$CPPFLAGS"
   export CPPFLAGS="$CPPFLAGS $INCLUDES -DHAVE_USB"
 

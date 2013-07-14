@@ -590,7 +590,7 @@ PHP_FUNCTION(usb_get_max_iso_packet_size)
         }
         ZEND_FETCH_RESOURCE(res_device, libusb_device *, &device, device_id, "usb_device", le_usb_device);
 
-        RETURN_LONG(libusb_get_iso_max_packet_size(res_device, endpoint));
+        RETURN_LONG(libusb_get_max_iso_packet_size(res_device, endpoint));
 }
 /* }}} usb_get_max_iso_packet_size */
 

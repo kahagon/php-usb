@@ -12,18 +12,28 @@
     </maintainers>
     <license>PHP</license>
     <release>
-        <version>0.0.1</version>
-        <date>2013-03-02</date>
+        <version>0.0.2</version>
+        <date>2013-07-14</date>
         <state>alpha</state>
-        <notes></notes>
+        <notes>
+            Fix dependencies description on usb.xml
+        </notes>
     </release>
+    <changelog>
+        <release>
+            <version>0.0.1</version>
+            <date>2013-03-02</date>
+            <state>alpha</state>
+            <notes>First release</notes>
+        </release>
+    </changelog>
 
-    <deps language="c">
-        <with defaults="$HOME/include" testfile="libusb-1.0/libusb.h">libusb install</with>
-        <header name="libusb.h" />
+    <deps language="c" platform="unix">
+        <with defaults="/usr/include:/usr/local/include" testfile="libusb-1.0/libusb.h">libusb install</with>
+        <header name="libusb.h" path="libusb-1.0" />
         <lib name="usb-1.0" platform="unix" />
     </deps>
-
+    
     <constants>
         <constant type="int" name="USB_REQUEST_GET_STATUS" value="LIBUSB_REQUEST_GET_STATUS"></constant>
         <constant type="int" name="USB_REQUEST_CLEAR_FEATURE" value="LIBUSB_REQUEST_CLEAR_FEATURE"></constant>
