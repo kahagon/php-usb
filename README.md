@@ -1,3 +1,7 @@
+php-usb
+=======
+To get more information, see [php-usb homepage](http://sandbox.n-3.so/php-usb/).
+
 
 HACKING
 =======
@@ -15,8 +19,6 @@ to the newly generated code again.
 Adding code snippets to the XML source itself on the other hand may be a 
 bit more complicated but this way your custom code will always be in the
 generated code no matter how often you rerun CodeGen_PECL.
-
-To get more information, see [php-usb homepage](http://sandbox.n-3.so/php-usb/).
 
 
 BUILDING ON UNIX etc.
