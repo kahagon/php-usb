@@ -1,5 +1,5 @@
-php-usb
-=======
+phpmake_usb
+===========
 To get more information, see [php-usb homepage](http://sandbox.n-3.so/php-usb/).  
 If you want to communicate with microcontroller via UART,  the shortest way is to use [PHPMake\SerialPort](https://github.com/oasynnoum/Gorilla).
 
