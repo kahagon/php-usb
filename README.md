@@ -4,7 +4,7 @@ To get more information, see [php-usb homepage](http://sandbox.n-3.so/php-usb/).
 If you want to communicate with microcontroller via UART,  the shortest way is to use [PHPMake\SerialPort](https://github.com/oasynnoum/Gorilla).
 
 
-related project is phpmake_usb_libs which is OO Wrapper for this extension.  
+related project is phpmake_usb_libs which is Object Oriented Wrapper for this extension.  
 https://github.com/oasynnoum/phpmake_usb_libs
 
 HACKING
