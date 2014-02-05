@@ -7,6 +7,21 @@ If you want to communicate with microcontroller via UART,  the shortest way is t
 related project is phpmake_usb_libs which is Object Oriented Wrapper for this extension.  
 https://github.com/oasynnoum/phpmake_usb_libs
 
+API
+===
+This extension is just simple PHP bindings for libusb-1.0, and the API just like libusb-1.0.  
+There is no API documentation.  
+But there are some examples and libusb-1.0 API documentation.
+Please refer to these for the time being.
+
+libusb Homepage  
+http://www.libusb.org/
+
+PHP examples (exist examples directory.)  
+https://github.com/oasynnoum/phpmake_usb/tree/master/examples
+
+
+
 HACKING
 =======
 
