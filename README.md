@@ -1,11 +1,6 @@
 phpmake_usb
 ===========
 To get more information, see [php-usb homepage](http://sandbox.n-3.so/php-usb/).  
-If you want to communicate with microcontroller via UART,  the shortest way is to use [PHPMake\SerialPort](https://github.com/oasynnoum/Gorilla).
-
-
-related project is phpmake_usb_libs which is Object Oriented Wrapper for this extension.  
-https://github.com/oasynnoum/phpmake_usb_libs
 
 API
 ===
@@ -19,8 +14,6 @@ http://www.libusb.org/
 
 PHP examples (exist examples directory.)  
 https://github.com/oasynnoum/phpmake_usb/tree/master/examples
-
-
 
 HACKING
 =======
@@ -43,13 +36,21 @@ generated code no matter how often you rerun CodeGen_PECL.
 BUILDING ON UNIX etc.
 =====================
 
+This extension depends on libusb-1.0.
+Please make sure that libusb-1.0 has installed.
+
 To compile your new extension, you will have to execute the following steps:
 
-1.  $ ./phpize
-2.  $ ./configure [--with-usb=...] 
-3.  $ make
-4.  $ make test
-5.  $ [sudo] make install
+    ./phpize
+    ./configure \
+         [CFLAGS="-I/path/to/libusb-1.0-header-directory"] \
+         [LDFLAGS="-L/path/to/libusb-1.0.so-lib-directory"] 
+    make
+    make test
+    [sudo] make install
+
+CFLAGS and LDFLAGS are optional. You should use these options if you 
+installed libusb-1.0 to location where are not found by configure command.
 
 
 TESTING

@@ -1,4 +1,5 @@
 nbproject
+*.swp
 
 Makefile.global
 acinclude.m4
