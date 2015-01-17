@@ -1430,6 +1430,7 @@ PHP_FUNCTION(usb_bulk_transfer)
         }
 
 	result = libusb_bulk_transfer(res_device_handle, endpoint, buffer, buffer_length, &actual_transferred, timeout);
+
         if (is_read && 0 < actual_transferred) {
             ZVAL_STRINGL(data, buffer, actual_transferred, 1);
         }
@@ -1484,7 +1485,7 @@ PHP_FUNCTION(usb_interrupt_transfer)
             }
         }
 
-	result = libusb_bulk_transfer(res_device_handle, endpoint, buffer, buffer_length, &actual_transferred, timeout);
+	result = libusb_interrupt_transfer(res_device_handle, endpoint, buffer, buffer_length, &actual_transferred, timeout);
         if (is_read && 0 < actual_transferred) {
             ZVAL_STRINGL(data, buffer, actual_transferred, 1);
         }
