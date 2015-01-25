@@ -24,7 +24,7 @@ if test "$PHP_USB" != "no"; then
 
   AC_DEFINE(HAVE_USB, 1, [ ])
 
-  PHP_NEW_EXTENSION(usb, usb.c , $ext_shared)
+  PHP_NEW_EXTENSION(usb, usb.c usb_descriptor.c usb_device.c usb_misc.c usb_syncio.c, $ext_shared)
 
 fi
 

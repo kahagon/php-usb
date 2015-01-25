@@ -62,6 +62,15 @@ PHP_MINFO_FUNCTION(usb);
 #include "TSRM.h"
 #endif
 
+extern int le_usb_context;
+extern int le_usb_device;
+extern int le_usb_device_handle;
+extern int le_usb_device_descriptor;
+extern int le_usb_endpoint_descriptor;
+extern int le_usb_interface_descriptor;
+extern int le_usb_interface;
+extern int le_usb_config_descriptor;
+
 #define FREE_RESOURCE(resource) zend_list_delete(Z_LVAL_P(resource))
 
 #define PROP_GET_LONG(name)    Z_LVAL_P(zend_read_property(_this_ce, _this_zval, #name, strlen(#name), 1 TSRMLS_CC))
