@@ -139,6 +139,236 @@ zend_function_entry usb_functions[] = {
 };
 /* }}} */
 
+static zend_class_entry * Descriptor_ce_ptr = NULL;
+static zend_class_entry * DeviceDescriptor_ce_ptr = NULL;
+static zend_class_entry * ConfigDescriptor_ce_ptr = NULL;
+static zend_class_entry * InterfaceAltsetting_ce_ptr = NULL;
+static zend_class_entry * InterfaceDescriptor_ce_ptr = NULL;
+static zend_class_entry * EndpointDescriptor_ce_ptr = NULL;
+
+void store_device_descriptor_to_zval(const struct libusb_device_descriptor *res_device_descriptor, zval * device_descriptor, INTERNAL_FUNCTION_PARAMETERS) {
+    object_init_ex(device_descriptor, DeviceDescriptor_ce_ptr);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("bLength"), res_device_descriptor->bLength TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("bDescriptorType"), res_device_descriptor->bDescriptorType TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("bcdUSB"), res_device_descriptor->bcdUSB TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("bDeviceClass"), res_device_descriptor->bDeviceClass TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("bDeviceSubClass"), res_device_descriptor->bDeviceSubClass TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("bDeviceProtocol"), res_device_descriptor->bDeviceProtocol TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("bMaxPacketSize0"), res_device_descriptor->bMaxPacketSize0 TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("idVendor"), res_device_descriptor->idVendor TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("idProduct"), res_device_descriptor->idProduct TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("bcdDevice"), res_device_descriptor->bcdDevice TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("iManufacturer"), res_device_descriptor->iManufacturer TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("iProduct"), res_device_descriptor->iProduct TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("iSerialNumber"), res_device_descriptor->iSerialNumber TSRMLS_CC);
+    zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("bNumConfigurations"), res_device_descriptor->bNumConfigurations TSRMLS_CC);
+}
+
+void store_config_descriptor_to_zval(const struct libusb_config_descriptor *res_config_descriptor, zval * config_descriptor, INTERNAL_FUNCTION_PARAMETERS) {
+    int i = 0;
+    zval *interface_array = NULL;
+    ALLOC_INIT_ZVAL(interface_array);
+    array_init(interface_array);
+
+    object_init_ex(config_descriptor, ConfigDescriptor_ce_ptr);
+    zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("bLength"), res_config_descriptor->bLength TSRMLS_CC);
+    zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("bDescriptorType"), res_config_descriptor->bDescriptorType TSRMLS_CC);
+    zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("wTotalLength"), res_config_descriptor->wTotalLength TSRMLS_CC);
+    zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("bNumInterfaces"), res_config_descriptor->bNumInterfaces TSRMLS_CC);
+    zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("bConfigurationValue"), res_config_descriptor->bConfigurationValue TSRMLS_CC);
+    zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("iConfiguration"), res_config_descriptor->iConfiguration TSRMLS_CC);
+    zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("bmAttributes"), res_config_descriptor->bmAttributes TSRMLS_CC);
+    zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("MaxPower"), res_config_descriptor->MaxPower TSRMLS_CC);
+    for (i = 0; i < res_config_descriptor->bNumInterfaces; i++) {
+        const struct libusb_interface res_interface = res_config_descriptor->interface[i];
+        zval *interface;
+        zval *altsetting;
+        int j = 0;
+        
+        //store_interface_to_zval(res_interface, interface, INTERNAL_FUNCTION_PARAM_PASSTHRU);
+        //*
+        ALLOC_INIT_ZVAL(interface);
+        object_init_ex(interface, InterfaceAltsetting_ce_ptr);
+
+        ALLOC_INIT_ZVAL(altsetting);
+        array_init(altsetting);
+        
+        for (j = 0; j < res_interface.num_altsetting; j++) {
+            const struct libusb_interface_descriptor res_interface_descriptor = res_interface.altsetting[j];
+            zval *interface_descriptor = NULL;
+            zval *endpoint_array = NULL;
+            int k = 0;
+
+            ALLOC_INIT_ZVAL(interface_descriptor);
+            object_init_ex(interface_descriptor, InterfaceDescriptor_ce_ptr);
+
+            ALLOC_INIT_ZVAL(endpoint_array);
+            array_init(endpoint_array);
+
+            zend_update_property_long(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("bLength"), res_interface_descriptor.bLength TSRMLS_CC);
+            zend_update_property_long(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("bDescriptorType"), res_interface_descriptor.bDescriptorType TSRMLS_CC);
+            zend_update_property_long(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("bInterfaceNumber"), res_interface_descriptor.bInterfaceNumber TSRMLS_CC);
+            zend_update_property_long(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("bAlternateSetting"), res_interface_descriptor.bAlternateSetting TSRMLS_CC);
+            zend_update_property_long(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("bNumEndpoints"), res_interface_descriptor.bNumEndpoints TSRMLS_CC);
+            zend_update_property_long(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("bInterfaceClass"), res_interface_descriptor.bInterfaceClass TSRMLS_CC);
+            zend_update_property_long(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("bInterfaceSubClass"), res_interface_descriptor.bInterfaceSubClass TSRMLS_CC);
+            zend_update_property_long(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("bInterfaceProtocol"), res_interface_descriptor.bInterfaceProtocol TSRMLS_CC);
+            zend_update_property_long(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("iInterface"), res_interface_descriptor.iInterface TSRMLS_CC);
+
+            for (k = 0; k < res_interface_descriptor.bNumEndpoints; k++) {
+                const struct libusb_endpoint_descriptor res_endpoint_descriptor = res_interface_descriptor.endpoint[k];
+                zval *endpoint_descriptor = NULL;
+                ALLOC_INIT_ZVAL(endpoint_descriptor);
+                object_init_ex(endpoint_descriptor, EndpointDescriptor_ce_ptr);
+
+                zend_update_property_long(EndpointDescriptor_ce_ptr, endpoint_descriptor, PROP_NAME("bLength"), res_endpoint_descriptor.bLength TSRMLS_CC);
+                zend_update_property_long(EndpointDescriptor_ce_ptr, endpoint_descriptor, PROP_NAME("bDescriptorType"), res_endpoint_descriptor.bDescriptorType TSRMLS_CC);
+                zend_update_property_long(EndpointDescriptor_ce_ptr, endpoint_descriptor, PROP_NAME("bEndpointAddress"), res_endpoint_descriptor.bEndpointAddress TSRMLS_CC);
+                zend_update_property_long(EndpointDescriptor_ce_ptr, endpoint_descriptor, PROP_NAME("bmAttributes"), res_endpoint_descriptor.bmAttributes TSRMLS_CC);
+                zend_update_property_long(EndpointDescriptor_ce_ptr, endpoint_descriptor, PROP_NAME("wMaxPacketSize"), res_endpoint_descriptor.wMaxPacketSize TSRMLS_CC);
+                zend_update_property_long(EndpointDescriptor_ce_ptr, endpoint_descriptor, PROP_NAME("bInterval"), res_endpoint_descriptor.bInterval TSRMLS_CC);
+                zend_update_property_long(EndpointDescriptor_ce_ptr, endpoint_descriptor, PROP_NAME("bRefresh"), res_endpoint_descriptor.bRefresh TSRMLS_CC);
+                zend_update_property_long(EndpointDescriptor_ce_ptr, endpoint_descriptor, PROP_NAME("bSynchAddress"), res_endpoint_descriptor.bSynchAddress TSRMLS_CC);
+                zend_update_property_stringl(EndpointDescriptor_ce_ptr, endpoint_descriptor, PROP_NAME("extra"), res_endpoint_descriptor.extra, res_endpoint_descriptor.extra_length TSRMLS_CC);
+                zend_update_property_long(EndpointDescriptor_ce_ptr, endpoint_descriptor, PROP_NAME("extra_length"), res_endpoint_descriptor.extra_length TSRMLS_CC);
+
+                add_next_index_zval(endpoint_array, endpoint_descriptor);
+            }
+
+            zend_update_property(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("endpoint"), endpoint_array TSRMLS_CC);
+            zend_update_property_stringl(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("extra"), res_interface_descriptor.extra, res_interface_descriptor.extra_length TSRMLS_CC);
+            zend_update_property_long(InterfaceDescriptor_ce_ptr, interface_descriptor, PROP_NAME("extra_length"), res_interface_descriptor.extra_length TSRMLS_CC);
+
+            add_next_index_zval(altsetting, interface_descriptor);
+        }
+        zend_update_property(InterfaceAltsetting_ce_ptr, interface, PROP_NAME("altsetting"), altsetting TSRMLS_CC);
+        zend_update_property_long(InterfaceAltsetting_ce_ptr, interface, PROP_NAME("num_altsetting"), res_interface.num_altsetting TSRMLS_CC);
+        //*/
+        add_next_index_zval(interface_array, interface);
+    }
+    zend_update_property(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("interface"), interface_array TSRMLS_CC);
+    zend_update_property_stringl(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("extra"), res_config_descriptor->extra, res_config_descriptor->extra_length TSRMLS_CC);
+    zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("extra_length"), res_config_descriptor->extra_length TSRMLS_CC);
+}
+
+
+/* {{{ Class Descriptor */
+static zend_function_entry Descriptor_methods[] = {
+  { NULL, NULL, NULL }
+};
+
+static void class_init_Descriptor(TSRMLS_D)
+{
+  zend_class_entry ce;
+  INIT_NS_CLASS_ENTRY(ce, USB_NS, "Descriptor", Descriptor_methods);
+  Descriptor_ce_ptr = zend_register_internal_class(&ce TSRMLS_CC);
+  zend_declare_property_long(Descriptor_ce_ptr, PROP_NAME("bLength"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(Descriptor_ce_ptr, PROP_NAME("bDescriptorType"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+}
+
+/* }}} */
+
+
+/* {{{ Class DeviceDescriptor */
+static zend_function_entry DeviceDescriptor_methods[] = {
+  { NULL, NULL, NULL }
+};
+static void class_init_DeviceDescriptor(TSRMLS_D)
+{
+  zend_class_entry ce;
+  INIT_NS_CLASS_ENTRY(ce, USB_NS, "DeviceDescriptor", DeviceDescriptor_methods);
+  DeviceDescriptor_ce_ptr = zend_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("bcdUSB"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("bDeviceClass"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("bDeviceSubClass"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("bDeviceProtocol"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("bMaxPacketSize0"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("idVendor"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("idProduct"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("bcdDevice"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("iManufacturer"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("iProduct"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("iSerialNumber"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("bNumConfigurations"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+}
+/* }}} */
+
+/* {{{ Class ConfigDescriptor */
+static zend_function_entry ConfigDescriptor_methods[] = {
+  { NULL, NULL, NULL }
+};
+static void class_init_ConfigDescriptor(TSRMLS_D)
+{
+  zend_class_entry ce;
+  INIT_NS_CLASS_ENTRY(ce, USB_NS, "ConfigDescriptor", ConfigDescriptor_methods);
+  ConfigDescriptor_ce_ptr = zend_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
+  zend_declare_property_long(ConfigDescriptor_ce_ptr, PROP_NAME("wTotalLength"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(ConfigDescriptor_ce_ptr, PROP_NAME("bNumInterfaces"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(ConfigDescriptor_ce_ptr, PROP_NAME("bConfigurationValue"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(ConfigDescriptor_ce_ptr, PROP_NAME("iConfiguration"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(ConfigDescriptor_ce_ptr, PROP_NAME("bmAttributes"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(ConfigDescriptor_ce_ptr, PROP_NAME("MaxPower"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_null(ConfigDescriptor_ce_ptr, PROP_NAME("interface"), ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_null(ConfigDescriptor_ce_ptr, PROP_NAME("extra"), ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(ConfigDescriptor_ce_ptr, PROP_NAME("extra_length"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+}
+/* }}} */
+
+/* {{{ Class InterfaceArray */
+static zend_function_entry InterfaceAltsetting_methods[] = {
+  { NULL, NULL, NULL }
+};
+static void class_init_InterfaceAltsetting(TSRMLS_D)
+{
+  zend_class_entry ce;
+  INIT_NS_CLASS_ENTRY(ce, USB_NS, "InterfaceAltsetting", InterfaceAltsetting_methods);
+  InterfaceAltsetting_ce_ptr = zend_register_internal_class(&ce TSRMLS_CC);
+  zend_declare_property_null(InterfaceAltsetting_ce_ptr, PROP_NAME("altsetting"), ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(InterfaceAltsetting_ce_ptr, PROP_NAME("num_altsetting"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+}
+/* }}} */
+
+/* {{{ Class InterfaceDescriptor */
+static zend_function_entry InterfaceDescriptor_methods[] = {
+  { NULL, NULL, NULL }
+};
+static void class_init_InterfaceDescriptor(TSRMLS_D)
+{
+  zend_class_entry ce;
+  INIT_NS_CLASS_ENTRY(ce, USB_NS, "InterfaceDescriptor", InterfaceDescriptor_methods);
+  InterfaceDescriptor_ce_ptr = zend_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
+  zend_declare_property_long(InterfaceDescriptor_ce_ptr, PROP_NAME("bInterfaceNumber"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(InterfaceDescriptor_ce_ptr, PROP_NAME("bAlternateSetting"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(InterfaceDescriptor_ce_ptr, PROP_NAME("bNumEndpoints"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(InterfaceDescriptor_ce_ptr, PROP_NAME("bInterfaceClass"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(InterfaceDescriptor_ce_ptr, PROP_NAME("bInterfaceSubClass"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(InterfaceDescriptor_ce_ptr, PROP_NAME("bInterfaceProtocol"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(InterfaceDescriptor_ce_ptr, PROP_NAME("iInterface"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_null(InterfaceDescriptor_ce_ptr, PROP_NAME("endpoint"), ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_null(InterfaceDescriptor_ce_ptr, PROP_NAME("extra"), ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(InterfaceDescriptor_ce_ptr, PROP_NAME("extra_length"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+}
+/* }}} */
+
+/* {{{ Class EndpointDescriptor */
+static zend_function_entry EndpointDescriptor_methods[] = {
+  { NULL, NULL, NULL }
+};
+static void class_init_EndpointDescriptor(TSRMLS_D)
+{
+  zend_class_entry ce;
+  INIT_NS_CLASS_ENTRY(ce, USB_NS, "EndpointDescriptor", EndpointDescriptor_methods);
+  EndpointDescriptor_ce_ptr = zend_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
+  zend_declare_property_long(EndpointDescriptor_ce_ptr, PROP_NAME("bEndpointAddress"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(EndpointDescriptor_ce_ptr, PROP_NAME("bmAttributes"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(EndpointDescriptor_ce_ptr, PROP_NAME("wMaxPacketSize"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(EndpointDescriptor_ce_ptr, PROP_NAME("bInterval"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(EndpointDescriptor_ce_ptr, PROP_NAME("bRefresh"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(EndpointDescriptor_ce_ptr, PROP_NAME("bSynchAddress"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_null(EndpointDescriptor_ce_ptr, PROP_NAME("extra"), ZEND_ACC_PUBLIC TSRMLS_CC);
+  zend_declare_property_long(EndpointDescriptor_ce_ptr, PROP_NAME("extra_length"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
+}
+/* }}} */
 
 /* {{{ usb_module_entry
  */
@@ -260,7 +490,14 @@ PHP_MINIT_FUNCTION(usb)
 						   NULL, "usb_config_descriptor", module_number);
 
 	/* add your stuff here */
-
+        
+        class_init_Descriptor(TSRMLS_C);
+        class_init_DeviceDescriptor(TSRMLS_C);
+        class_init_ConfigDescriptor(TSRMLS_C);
+        class_init_InterfaceAltsetting(TSRMLS_C);
+        class_init_InterfaceDescriptor(TSRMLS_C);
+        class_init_EndpointDescriptor(TSRMLS_C);
+        
 	return SUCCESS;
 }
 /* }}} */

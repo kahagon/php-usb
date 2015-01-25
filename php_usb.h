@@ -62,6 +62,9 @@ PHP_MINFO_FUNCTION(usb);
 #include "TSRM.h"
 #endif
 
+#define PROP_NAME(name) name, strlen(name)
+#define USB_NS "PHPMake\\USB"
+
 extern int le_usb_context;
 extern int le_usb_device;
 extern int le_usb_device_handle;
@@ -70,6 +73,9 @@ extern int le_usb_endpoint_descriptor;
 extern int le_usb_interface_descriptor;
 extern int le_usb_interface;
 extern int le_usb_config_descriptor;
+
+void store_device_descriptor_to_zval(const struct libusb_device_descriptor *res_device_descriptor, zval * device_descriptor, INTERNAL_FUNCTION_PARAMETERS);
+void store_config_descriptor_to_zval(const struct libusb_config_descriptor *res_config_descriptor, zval * config_descriptor, INTERNAL_FUNCTION_PARAMETERS);
 
 #define FREE_RESOURCE(resource) zend_list_delete(Z_LVAL_P(resource))
 
