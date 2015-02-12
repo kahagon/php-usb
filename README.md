@@ -42,15 +42,13 @@ Please make sure that libusb-1.0 has installed.
 To compile your new extension, you will have to execute the following steps:
 
     ./phpize
-    ./configure \
-         [CFLAGS="-I/path/to/libusb-1.0-header-directory"] \
-         [LDFLAGS="-L/path/to/libusb-1.0.so-lib-directory"] 
+    ./configure [--with-usb=/path/to/libusb-1.0-installed]
     make
     make test
     [sudo] make install
 
-CFLAGS and LDFLAGS are optional. You should use these options if you 
-installed libusb-1.0 to location where are not found by configure command.
+--with-usb is optional. You should use this option if you've installed 
+libusb-1.0 to location where are not found by configure command.
 
 
 TESTING
