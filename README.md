@@ -3,7 +3,7 @@ php-usb
 This extension is PHP bindings for libusb-1.0. There is no API documentation.  
 
 libusb Homepage  
-http://www.libusb.org/
+https://libusb.info/
 
 Here is [PHP examples](examples)
 
