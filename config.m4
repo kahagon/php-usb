@@ -2,7 +2,7 @@ dnl
 dnl $ Id: $
 dnl
 
-PHP_ARG_WITH(usb, for libusb-1.0 support, [  --with-usb              libusb-1.0 installed directory], [])
+PHP_ARG_WITH(usb, for libusb-1.0 support, [  --with-usb              Configure this ext for compiling default=yes], [])
 
 if test "$PHP_USB" != "no"; then
 
@@ -10,44 +10,52 @@ if test "$PHP_USB" != "no"; then
   export CPPFLAGS="$CPPFLAGS $INCLUDES -DHAVE_USB"
 
   AC_MSG_CHECKING(PHP version)
-  AC_TRY_COMPILE([#include <php_version.h>], [
-#if PHP_VERSION_ID < 40000
-#error  this extension requires at least PHP version 4.0.0
-#endif
-],
-[AC_MSG_RESULT(ok)],
-[AC_MSG_ERROR([need at least PHP 4.0.0])])
+  AC_TRY_COMPILE(
+    [#include <php_version.h>], 
+    [
+      #if PHP_VERSION_ID < 50300
+      #error  this extension requires at least PHP version 5.3.0
+      #endif
+    ],
+    [AC_MSG_RESULT(ok)],
+    [AC_MSG_ERROR([need at least PHP 5.3.0])]
+  )
 
-dnl  AC_CHECK_HEADER([libusb-1.0/libusb.h], [], AC_MSG_ERROR('libusb-1.0/libusb.h' header not found))
+  LIBUSB_LIBDIR=''
+  AC_CHECK_PROG(PKG_CONFIG, pkg-config, pkg-config)
 
-  PHP_LIBUSB_DIR=''
-  HEADER_FILE="include/libusb-1.0/libusb.h"
-  AC_MSG_CHECKING(libusb-1.0 installed directory)
+  if test -n "$PKG_CONFIG"; then
 
-  if test $PHP_USB = 'yes' ; then
-    DEFAULT_PATH_LIST="/usr /usr/local"
-    for TMP_PATH in $DEFAULT_PATH_LIST; do
-      if test -r $TMP_PATH/$HEADER_FILE ; then
-        PHP_LIBUSB_DIR=$TMP_PATH
-      fi
-    done
+    AC_CHECK_HEADER([libusb-1.0/libusb.h], [], AC_MSG_ERROR('libusb-1.0/libusb.h' header not found))
+
+    AC_MSG_CHECKING(libusb-1.0 libdir)
+    LIBUSB_LIBDIR=`$PKG_CONFIG libusb-1.0 --variable=libdir`
+
+    if test $LIBUSB_LIBDIR = ''; then
+
+      AC_MSG_ERROR([not found])
+
+    else
+
+      AC_MSG_RESULT([found $LIBUSB_LIBDIR])
+
+      PHP_CHECK_LIBRARY(
+        usb-1.0, 
+        libusb_init,
+        [
+          PHP_ADD_LIBRARY_WITH_PATH(usb-1.0, $LIBUSB_LIBDIR, USB_SHARED_LIBADD)
+          AC_DEFINE(HAVE_USB, 1, [ ])
+        ],
+        [
+          AC_MSG_ERROR([libusb-1.0 library not found])
+        ]
+      )
+    fi
   else
-    PHP_LIBUSB_DIR=$PHP_USB
-  fi 
 
-  if ! test -r $PHP_LIBUSB_DIR/$HEADER_FILE ; then
     AC_MSG_ERROR([not found])
-  else
-    AC_MSG_RESULT([found $PHP_LIBUSB_DIR])
-  fi
 
-  PHP_CHECK_LIBRARY(usb-1.0, libusb_init,
-  [
-    PHP_ADD_LIBRARY_WITH_PATH(usb-1.0, $PHP_LIBUSB_DIR/lib, USB_SHARED_LIBADD)
-    AC_DEFINE(HAVE_USB, 1, [ ])
-  ],[
-    AC_MSG_ERROR([libusb-1.0 library not found])
-  ])
+  fi
 
   PHP_SUBST(USB_SHARED_LIBADD)
 
