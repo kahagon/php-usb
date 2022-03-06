@@ -17,9 +17,9 @@ libusb wrapper
   </description>
 
   <lead>
-    <name>Keng-ichi Ahagon</name>
-    <user>oasynnoum</user>
-    <email>k.ahagon@n-3.so</email>
+    <name>Kenichi Ahagon</name>
+    <user>kahagon</user>
+    <email>kahagon@tamana.dev</email>
     <active>yes</active>
   </lead>
 
@@ -94,7 +94,7 @@ none
   <dependencies>
     <required>
       <php>
-        <min>4.0.0</min>
+        <min>5.3.0</min>
       </php>
       <pearinstaller>
         <min>1.4.0a1</min>

@@ -8,7 +8,7 @@
 	 | obtain it through the world-wide-web, please send a note to          |
 	 | license@php.net so we can mail you a copy immediately.               |
 	 +----------------------------------------------------------------------+
-	 | Authors: Keng-ichi Ahagon <k.ahagon@n-3.so>                          |
+	 | Authors: Kenichi Ahagon <kahagon@tamana.dev>                         |
 	 +----------------------------------------------------------------------+
 */
 

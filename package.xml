@@ -16,9 +16,9 @@ libusb wrapper
 
   <maintainers>
     <maintainer>
-      <user>oasynnoum</user>
-      <name>Keng-ichi Ahagon</name>
-      <email>k.ahagon@n-3.so</email>
+      <user>kahagon</user>
+      <name>Kenchi Ahagon</name>
+      <email>kahagon@tamana.dev</email>
       <role>lead</role>
     </maintainer>
   </maintainers>
@@ -33,7 +33,7 @@ libusb wrapper
 
   </changelog>
   <deps>
-    <dep type="php" rel="ge" version="4.0.0"/>
+    <dep type="php" rel="ge" version="5.3.0"/>
   </deps>
 
   <filelist>

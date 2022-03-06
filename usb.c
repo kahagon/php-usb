@@ -8,7 +8,7 @@
    | obtain it through the world-wide-web, please send a note to          |
    | license@php.net so we can mail you a copy immediately.               |
    +----------------------------------------------------------------------+
-   | Authors: Keng-ichi Ahagon <k.ahagon@n-3.so>                          |
+   | Authors: Kenichi Ahagon <kahagon@tamana.dev>                         |
    +----------------------------------------------------------------------+
 */
 
@@ -548,7 +548,7 @@ PHP_MINFO_FUNCTION(usb)
 	php_info_print_table_row(2, "Version",PHP_USB_VERSION " (alpha)");
 	php_info_print_table_row(2, "Released", "2013-03-02");
 	php_info_print_table_row(2, "CVS Revision", "$Id: $");
-	php_info_print_table_row(2, "Authors", "Keng-ichi Ahagon 'k.ahagon@n-3.so' (lead)\n");
+	php_info_print_table_row(2, "Authors", "Kenichi Ahagon 'kahagon@tamana.dev'\n");
 	php_info_print_table_end();
 	/* add your stuff here */
 

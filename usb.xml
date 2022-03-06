@@ -4,9 +4,9 @@
     <description>libusb wrapper</description>
     <maintainers>
         <maintainer>
-            <user>oasynnoum</user>
-            <name>Keng-ichi Ahagon</name>
-            <email>k.ahagon@n-3.so</email>
+            <user>kahagon</user>
+            <name>Kenichi Ahagon</name>
+            <email>kahagon@tamana.dev</email>
             <role>lead</role>
         </maintainer>
     </maintainers>
