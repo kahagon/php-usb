@@ -25,7 +25,7 @@ PHP_FUNCTION(usb_error_name)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &error_code) == FAILURE) {
 		return;
 	}
-	
+
 	RETURN_STRING(libusb_error_name(error_code), 1);
 }
 /* }}} usb_error_name */
@@ -107,3 +107,62 @@ PHP_FUNCTION(usb_class_name)
 }
 /* }}} usb_class_name */
 
+
+/* {{{ proto string usb_descriptor_type_name(int descriptor_type_code)
+   */
+PHP_FUNCTION(usb_descriptor_type_name)
+{
+	char *descriptor_type_name = NULL;
+	long descriptor_type_code = 0;
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &descriptor_type_code) == FAILURE) {
+		return;
+	}
+
+	switch (descriptor_type_code) {
+		case LIBUSB_DT_DEVICE:
+			descriptor_type_name = "USB_DT_DEVICE";
+			break;
+		case LIBUSB_DT_CONFIG:
+			descriptor_type_name = "USB_DT_CONFIG";
+			break;
+		case LIBUSB_DT_STRING:
+			descriptor_type_name = "USB_DT_STRING";
+			break;
+		case LIBUSB_DT_INTERFACE:
+			descriptor_type_name = "USB_DT_INTERFACE";
+			break;
+		case LIBUSB_DT_ENDPOINT:
+			descriptor_type_name = "USB_DT_ENDPOINT";
+			break;
+		case LIBUSB_DT_BOS:
+			descriptor_type_name = "USB_DT_BOS";
+			break;
+		case LIBUSB_DT_DEVICE_CAPABILITY:
+			descriptor_type_name = "USB_DT_DEVICE_CAPABILITY";
+			break;
+		case LIBUSB_DT_HID:
+			descriptor_type_name = "USB_DT_HID";
+			break;
+		case LIBUSB_DT_REPORT:
+			descriptor_type_name = "USB_DT_REPORT";
+			break;
+		case LIBUSB_DT_PHYSICAL:
+			descriptor_type_name = "USB_DT_PHYSICAL";
+			break;
+		case LIBUSB_DT_HUB:
+			descriptor_type_name = "USB_DT_HUB";
+			break;
+		case LIBUSB_DT_SUPERSPEED_HUB:
+			descriptor_type_name = "USB_DT_SUPERSPEED_HUB";
+			break;
+		case LIBUSB_DT_SS_ENDPOINT_COMPANION:
+			descriptor_type_name = "USB_DT_SS_ENDPOINT_COMPANION";
+			break;
+		default:
+			descriptor_type_name = "USB_DT_UNKNOWN";
+			break;
+	}
+	
+	RETURN_STRING(descriptor_type_name, 1);
+}
+/* }}} usb_descriptor_type_name */
