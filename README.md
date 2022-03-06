@@ -7,6 +7,13 @@ https://libusb.info/
 
 Here is [PHP examples](examples)
 
+
+Requirements
+============
+- php >= 5.3.0
+- libusb-1.0 >= 1.0.16
+
+
 HACKING
 =======
 

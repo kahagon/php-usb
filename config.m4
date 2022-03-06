@@ -1,3 +1,12 @@
+php-usb 定数　対応状況
+
+LIBUSB_DT_BOS
+LIBUSB_DT_DEVICE_CAPABILITY
+LIBUSB_DT_SUPERSPEED_HUB
+LIBUSB_DT_SS_ENDPOINT_COMPANION
+
+
+
 dnl
 dnl $ Id: $
 dnl
@@ -21,40 +30,49 @@ if test "$PHP_USB" != "no"; then
     [AC_MSG_ERROR([need at least PHP 5.3.0])]
   )
 
-  LIBUSB_LIBDIR=''
   AC_CHECK_PROG(PKG_CONFIG, pkg-config, pkg-config)
 
-  if test -n "$PKG_CONFIG"; then
+  if ! test -n "$PKG_CONFIG"; then
+    AC_MSG_ERROR([not found])
+  fi
 
-    AC_CHECK_HEADER([libusb-1.0/libusb.h], [], AC_MSG_ERROR('libusb-1.0/libusb.h' header not found))
+  AC_CHECK_HEADER([libusb-1.0/libusb.h], [], AC_MSG_ERROR('libusb-1.0/libusb.h' header not found))
 
-    AC_MSG_CHECKING(libusb-1.0 libdir)
-    LIBUSB_LIBDIR=`$PKG_CONFIG libusb-1.0 --variable=libdir`
+  AC_MSG_CHECKING(libusb-1.0 libdir)
+  LIBUSB_LIBDIR=`$PKG_CONFIG libusb-1.0 --variable=libdir`
+  LIBUSB_VERSION=`$PKG_CONFIG libusb-1.0 --modversion`
 
-    if test $LIBUSB_LIBDIR = ''; then
-
-      AC_MSG_ERROR([not found])
-
-    else
-
-      AC_MSG_RESULT([found $LIBUSB_LIBDIR])
-
-      PHP_CHECK_LIBRARY(
-        usb-1.0, 
-        libusb_init,
-        [
-          PHP_ADD_LIBRARY_WITH_PATH(usb-1.0, $LIBUSB_LIBDIR, USB_SHARED_LIBADD)
-          AC_DEFINE(HAVE_USB, 1, [ ])
-        ],
-        [
-          AC_MSG_ERROR([libusb-1.0 library not found])
-        ]
-      )
-    fi
-  else
+  if test $LIBUSB_LIBDIR = ''; then
 
     AC_MSG_ERROR([not found])
 
+  else
+
+    AC_MSG_RESULT([found $LIBUSB_LIBDIR])
+
+    PHP_CHECK_LIBRARY(
+      usb-1.0, 
+      libusb_init,
+      [
+        PHP_ADD_LIBRARY_WITH_PATH(usb-1.0, $LIBUSB_LIBDIR, USB_SHARED_LIBADD)
+        AC_DEFINE(HAVE_USB, 1, [ ])
+      ],
+      [
+        AC_MSG_ERROR([libusb-1.0 library not found])
+      ]
+    )
+
+    AC_MSG_CHECKING(libusb-1.0 version)
+    ac_IFS=$IFS
+    IFS="."
+    set $LIBUSB_VERSION
+    IFS=$ac_IFS
+    LIBUSB_VERSION_NUMBER=`expr [$]1 \* 1000000 + [$]2 \* 1000 + [$]3`
+    AC_MSG_RESULT([found $LIBUSB_VERSION])
+
+    if ! test "$LIBUSB_VERSION_NUMBER" -ge "1000016"; then
+      AC_MSG_ERROR([libusb-1.0 version 1.0.16 or greater required.])
+    fi
   fi
 
   PHP_SUBST(USB_SHARED_LIBADD)
