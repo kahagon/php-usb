@@ -1,19 +1,11 @@
-phpmake_usb
+php-usb
 ===========
-To get more information, see [php-usb homepage](http://sandbox.n-3.so/php-usb/).  
-
-API
-===
-This extension is just simple PHP bindings for libusb-1.0, and the API just like libusb-1.0.  
-There is no API documentation.  
-But there are some examples and libusb-1.0 API documentation.
-Please refer to these for the time being.
+This extension is PHP bindings for libusb-1.0. There is no API documentation.  
 
 libusb Homepage  
-http://www.libusb.org/
+https://libusb.info/
 
-PHP examples (exist examples directory.)  
-https://github.com/oasynnoum/phpmake_usb/tree/master/examples
+Here is [PHP examples](examples)
 
 HACKING
 =======
