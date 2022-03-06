@@ -63,7 +63,7 @@ PHP_MINFO_FUNCTION(usb);
 #endif
 
 #define PROP_NAME(name) name, strlen(name)
-#define USB_NS "PHPMake\\USB"
+#define USB_NS "USB"
 
 extern int le_usb_context;
 extern int le_usb_device;
