@@ -89,6 +89,9 @@ PHP_FUNCTION(usb_class_name)
             case LIBUSB_CLASS_WIRELESS:
                 class_name = "USB_CLASS_WIRELESS";
                 break;
+            case LIBUSB_CLASS_MISCELLANEOUS:
+                class_name = "USB_CLASS_MISCELLANEOUS";
+                break;
             case LIBUSB_CLASS_APPLICATION:
                 class_name = "USB_CLASS_APPLICATION";
                 break;
