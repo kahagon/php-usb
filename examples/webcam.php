@@ -1,7 +1,13 @@
 <?php
 $context = null;
-$vendor_id = 0x058f;
-$product_id = 0x3831;
+if ($argc == 2) {
+	$ids = explode(':', $argv[1]);
+    $vendor_id = intval($ids[0], 16);
+    $product_id = intval($ids[1], 16);
+} else {
+	printf('Usage: php %s vid:pid' . PHP_EOL, $argv[0]);
+	exit(1);
+}
 $result_init = usb_init($context);
 if ($result_init != USB_SUCCESS) {
     die('failed to usb_init(). ' . usb_error_name($result_init));
@@ -20,6 +26,7 @@ if ($device_handle === null) {
 }
 
 $device = usb_get_device($device_handle);
+// var_dump($context, $device_handle, $device);die();
 usb_get_device_descriptor($device, $device_descriptor);
 usb_get_active_config_descriptor($device, $config_descriptor);
 var_dump($device_descriptor, $config_descriptor);

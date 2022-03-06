@@ -1,7 +1,13 @@
 <?php
 $context = null;
-$vendor_id = 0x04a9;
-$product_id = 0x10d3;
+if ($argc == 2) {
+	$ids = explode(':', $argv[1]);
+    $vendor_id = intval($ids[0], 16);
+    $product_id = intval($ids[1], 16);
+} else {
+	printf('Usage: php %s vid:pid' . PHP_EOL, $argv[0]);
+	exit(1);
+}
 $result_init = usb_init($context);
 if ($result_init != USB_SUCCESS) {
     die('failed to usb_init(). ' . usb_error_name($result_init));

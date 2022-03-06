@@ -1,6 +1,12 @@
 <?php
-$vendor_id = 1455;//0x05af;
-$product_id = 1287;//0x0507;
+if ($argc == 2) {
+	$ids = explode(':', $argv[1]);
+    $vendor_id = intval($ids[0], 16);
+    $product_id = intval($ids[1], 16);
+} else {
+	printf('Usage: php %s vid:pid' . PHP_EOL, $argv[0]);
+	exit(1);
+}
 $context;
 $result = usb_init($context);
 if ($result != USB_SUCCESS) {
