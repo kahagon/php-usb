@@ -13,10 +13,14 @@ PHP_FUNCTION(usb_get_device_descriptor)
 	int result;
 
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rz", &device, &device_descriptor) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rz/", &device, &device_descriptor) == FAILURE) {
 		return;
 	}
-	ZEND_FETCH_RESOURCE(res_device, libusb_device *, &device, device_id, "usb_device", le_usb_device);
+	phpusb_fetch_resource(res_device, libusb_device *, device, device_id, "usb_device", le_usb_device);
+	
+//	if ((res_device = (libusb_context *)zend_fetch_resource(Z_RES_P(device), "usb_device", le_usb_device)) == NULL) {
+//		RETURN_FALSE;
+//	}
 
 	result = libusb_get_device_descriptor(res_device, &res_device_descriptor);
 	if (result == LIBUSB_SUCCESS) {
@@ -27,7 +31,7 @@ PHP_FUNCTION(usb_get_device_descriptor)
 }
 /* }}} usb_get_device_descriptor */
 
-
+#if 0
 /* {{{ proto int usb_get_active_config_descriptor(resource usb_device device, mixed &config_descriptor)
    */
 PHP_FUNCTION(usb_get_active_config_descriptor)
@@ -233,3 +237,5 @@ PHP_FUNCTION(usb_get_string_descriptor)
 	RETURN_LONG(0);
 }
 /* }}} usb_get_string_descriptor */
+
+#endif

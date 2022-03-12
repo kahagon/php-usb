@@ -18,9 +18,22 @@
 
 #if HAVE_USB
 
+#if PHP_VERSION_ID < 70000
+int phpusb_register_resource(zval *rsrc_result, void *rsrc_pointer, int rsrc_type TSRMLS_DC) {
+	ZVAL_RESOURCE(rsrc_result, rsrc_pointer);
+	return ZEND_REGISTER_RESOURCE(rsrc_result, rsrc_pointer, rsrc_type);
+}
+#else
+zend_resource * phpusb_register_resource(zval* rsrc_result, void *rsrc_pointer, int rsrc_type TSRMLS_DC) {
+	zend_resource * r = zend_register_resource(rsrc_pointer, rsrc_type);
+	ZVAL_RES(rsrc_result, r);
+	return Z_RES_P(rsrc_result);
+}
+#endif
+
 /* {{{ Resource destructors */
 int le_usb_context;
-void usb_context_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+void usb_context_dtor(phpusb_resource *rsrc TSRMLS_DC)
 {
 	libusb_context * resource = (libusb_context *)(rsrc->ptr);
 
@@ -30,7 +43,7 @@ void usb_context_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 }
 
 int le_usb_device;
-void usb_device_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+void usb_device_dtor(phpusb_resource *rsrc TSRMLS_DC)
 {
 	libusb_device * resource = (libusb_device *)(rsrc->ptr);
 
@@ -39,7 +52,7 @@ void usb_device_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 }
 
 int le_usb_device_handle;
-void usb_device_handle_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+void usb_device_handle_dtor(phpusb_resource *rsrc TSRMLS_DC)
 {
 	libusb_device_handle * resource = (libusb_device_handle *)(rsrc->ptr);
 
@@ -48,7 +61,7 @@ void usb_device_handle_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 }
 
 int le_usb_device_descriptor;
-void usb_device_descriptor_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+void usb_device_descriptor_dtor(phpusb_resource *rsrc TSRMLS_DC)
 {
 	struct libusb_device_descriptor * resource = (struct libusb_device_descriptor *)(rsrc->ptr);
 
@@ -57,7 +70,7 @@ void usb_device_descriptor_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 }
 
 int le_usb_endpoint_descriptor;
-void usb_endpoint_descriptor_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+void usb_endpoint_descriptor_dtor(phpusb_resource *rsrc TSRMLS_DC)
 {
 	struct libusb_endpoint_descriptor * resource = (struct libusb_endpoint_descriptor *)(rsrc->ptr);
 
@@ -66,7 +79,7 @@ void usb_endpoint_descriptor_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 }
 
 int le_usb_interface_descriptor;
-void usb_interface_descriptor_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+void usb_interface_descriptor_dtor(phpusb_resource *rsrc TSRMLS_DC)
 {
 	struct libusb_interface_descriptor * resource = (struct libusb_interface_descriptor *)(rsrc->ptr);
 
@@ -75,7 +88,7 @@ void usb_interface_descriptor_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 }
 
 int le_usb_interface;
-void usb_interface_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+void usb_interface_dtor(phpusb_resource *rsrc TSRMLS_DC)
 {
 	struct libusb_interface * resource = (struct libusb_interface *)(rsrc->ptr);
 
@@ -84,7 +97,7 @@ void usb_interface_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 }
 
 int le_usb_config_descriptor;
-void usb_config_descriptor_dtor(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+void usb_config_descriptor_dtor(phpusb_resource *rsrc TSRMLS_DC)
 {
 	struct libusb_config_descriptor * resource = (struct libusb_config_descriptor *)(rsrc->ptr);
 
@@ -99,43 +112,43 @@ zend_function_entry usb_functions[] = {
 	PHP_FE(usb_init            , usb_init_arg_info)
 	PHP_FE(usb_exit            , usb_exit_arg_info)
 	PHP_FE(usb_get_device_list , usb_get_device_list_arg_info)
-	PHP_FE(usb_free_device_list, usb_free_device_list_arg_info)
-	PHP_FE(usb_open            , usb_open_arg_info)
-	PHP_FE(usb_close           , usb_close_arg_info)
-	PHP_FE(usb_get_bus_number  , usb_get_bus_number_arg_info)
-	PHP_FE(usb_get_device_address, usb_get_device_address_arg_info)
-	PHP_FE(usb_get_device_speed, usb_get_device_speed_arg_info)
-	PHP_FE(usb_get_max_packet_size, usb_get_max_packet_size_arg_info)
-	PHP_FE(usb_get_max_iso_packet_size, usb_get_max_iso_packet_size_arg_info)
-	PHP_FE(usb_ref_device      , usb_ref_device_arg_info)
-	PHP_FE(usb_unref_device    , usb_unref_device_arg_info)
-	PHP_FE(usb_open_device_with_vid_pid, usb_open_device_with_vid_pid_arg_info)
-	PHP_FE(usb_get_device      , usb_get_device_arg_info)
-	PHP_FE(usb_get_configuration, usb_get_configuration_arg_info)
-	PHP_FE(usb_set_configuration, usb_set_configuration_arg_info)
-	PHP_FE(usb_claim_interface , usb_claim_interface_arg_info)
-	PHP_FE(usb_release_interface, usb_release_interface_arg_info)
-	PHP_FE(usb_set_interface_alt_setting, usb_set_interface_alt_setting_arg_info)
-	PHP_FE(usb_clear_halt      , usb_clear_halt_arg_info)
-	PHP_FE(usb_reset_device    , usb_reset_device_arg_info)
-	PHP_FE(usb_kernel_driver_active, usb_kernel_driver_active_arg_info)
-	PHP_FE(usb_detach_kernel_driver, usb_detach_kernel_driver_arg_info)
-	PHP_FE(usb_attach_kernel_driver, usb_attach_kernel_driver_arg_info)
-	PHP_FE(usb_has_capability  , usb_has_capability_arg_info)
-	PHP_FE(usb_error_name      , usb_error_name_arg_info)
-	PHP_FE(usb_class_name      , usb_class_name_arg_info)
-	PHP_FE(usb_descriptor_type_name, usb_descriptor_type_name_arg_info)
+//	PHP_FE(usb_free_device_list, usb_free_device_list_arg_info)
+//	PHP_FE(usb_open            , usb_open_arg_info)
+//	PHP_FE(usb_close           , usb_close_arg_info)
+//	PHP_FE(usb_get_bus_number  , usb_get_bus_number_arg_info)
+//	PHP_FE(usb_get_device_address, usb_get_device_address_arg_info)
+//	PHP_FE(usb_get_device_speed, usb_get_device_speed_arg_info)
+//	PHP_FE(usb_get_max_packet_size, usb_get_max_packet_size_arg_info)
+//	PHP_FE(usb_get_max_iso_packet_size, usb_get_max_iso_packet_size_arg_info)
+//	PHP_FE(usb_ref_device      , usb_ref_device_arg_info)
+//	PHP_FE(usb_unref_device    , usb_unref_device_arg_info)
+//	PHP_FE(usb_open_device_with_vid_pid, usb_open_device_with_vid_pid_arg_info)
+//	PHP_FE(usb_get_device      , usb_get_device_arg_info)
+//	PHP_FE(usb_get_configuration, usb_get_configuration_arg_info)
+//	PHP_FE(usb_set_configuration, usb_set_configuration_arg_info)
+//	PHP_FE(usb_claim_interface , usb_claim_interface_arg_info)
+//	PHP_FE(usb_release_interface, usb_release_interface_arg_info)
+//	PHP_FE(usb_set_interface_alt_setting, usb_set_interface_alt_setting_arg_info)
+//	PHP_FE(usb_clear_halt      , usb_clear_halt_arg_info)
+//	PHP_FE(usb_reset_device    , usb_reset_device_arg_info)
+//	PHP_FE(usb_kernel_driver_active, usb_kernel_driver_active_arg_info)
+//	PHP_FE(usb_detach_kernel_driver, usb_detach_kernel_driver_arg_info)
+//	PHP_FE(usb_attach_kernel_driver, usb_attach_kernel_driver_arg_info)
+//	PHP_FE(usb_has_capability  , usb_has_capability_arg_info)
+//	PHP_FE(usb_error_name      , usb_error_name_arg_info)
+//	PHP_FE(usb_class_name      , usb_class_name_arg_info)
+//	PHP_FE(usb_descriptor_type_name, usb_descriptor_type_name_arg_info)
 	PHP_FE(usb_get_device_descriptor, usb_get_device_descriptor_arg_info)
-	PHP_FE(usb_get_active_config_descriptor, usb_get_active_config_descriptor_arg_info)
-	PHP_FE(usb_get_config_descriptor, usb_get_config_descriptor_arg_info)
-	PHP_FE(usb_get_config_descriptor_by_value, usb_get_config_descriptor_by_value_arg_info)
-	PHP_FE(usb_free_config_descriptor, usb_free_config_descriptor_arg_info)
-	PHP_FE(usb_get_string_descriptor_ascii, usb_get_string_descriptor_ascii_arg_info)
-	PHP_FE(usb_get_descriptor  , usb_get_descriptor_arg_info)
-	PHP_FE(usb_get_string_descriptor, usb_get_string_descriptor_arg_info)
-	PHP_FE(usb_control_transfer, usb_control_transfer_arg_info)
-	PHP_FE(usb_bulk_transfer   , usb_bulk_transfer_arg_info)
-	PHP_FE(usb_interrupt_transfer, usb_interrupt_transfer_arg_info)
+//	PHP_FE(usb_get_active_config_descriptor, usb_get_active_config_descriptor_arg_info)
+//	PHP_FE(usb_get_config_descriptor, usb_get_config_descriptor_arg_info)
+//	PHP_FE(usb_get_config_descriptor_by_value, usb_get_config_descriptor_by_value_arg_info)
+//	PHP_FE(usb_free_config_descriptor, usb_free_config_descriptor_arg_info)
+//	PHP_FE(usb_get_string_descriptor_ascii, usb_get_string_descriptor_ascii_arg_info)
+//	PHP_FE(usb_get_descriptor  , usb_get_descriptor_arg_info)
+//	PHP_FE(usb_get_string_descriptor, usb_get_string_descriptor_arg_info)
+//	PHP_FE(usb_control_transfer, usb_control_transfer_arg_info)
+//	PHP_FE(usb_bulk_transfer   , usb_bulk_transfer_arg_info)
+//	PHP_FE(usb_interrupt_transfer, usb_interrupt_transfer_arg_info)
 	{ NULL, NULL, NULL }
 };
 /* }}} */
@@ -165,6 +178,7 @@ void store_device_descriptor_to_zval(const struct libusb_device_descriptor *res_
 	zend_update_property_long(DeviceDescriptor_ce_ptr, device_descriptor, PROP_NAME("bNumConfigurations"), res_device_descriptor->bNumConfigurations TSRMLS_CC);
 }
 
+#if 0
 void store_config_descriptor_to_zval(const struct libusb_config_descriptor *res_config_descriptor, zval * config_descriptor, INTERNAL_FUNCTION_PARAMETERS) {
 	int i = 0;
 	zval *interface_array = NULL;
@@ -251,7 +265,7 @@ void store_config_descriptor_to_zval(const struct libusb_config_descriptor *res_
 	zend_update_property_stringl(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("extra"), res_config_descriptor->extra, res_config_descriptor->extra_length TSRMLS_CC);
 	zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("extra_length"), res_config_descriptor->extra_length TSRMLS_CC);
 }
-
+#endif
 
 /* {{{ Class Descriptor */
 static zend_function_entry Descriptor_methods[] = {
@@ -278,7 +292,7 @@ static void class_init_DeviceDescriptor(TSRMLS_D)
 {
   zend_class_entry ce;
   INIT_NS_CLASS_ENTRY(ce, USB_NS, "DeviceDescriptor", DeviceDescriptor_methods);
-  DeviceDescriptor_ce_ptr = zend_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
+  DeviceDescriptor_ce_ptr = phpusb_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
   zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("bcdUSB"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
   zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("bDeviceClass"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
   zend_declare_property_long(DeviceDescriptor_ce_ptr, PROP_NAME("bDeviceSubClass"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
@@ -302,7 +316,7 @@ static void class_init_ConfigDescriptor(TSRMLS_D)
 {
   zend_class_entry ce;
   INIT_NS_CLASS_ENTRY(ce, USB_NS, "ConfigDescriptor", ConfigDescriptor_methods);
-  ConfigDescriptor_ce_ptr = zend_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
+  ConfigDescriptor_ce_ptr = phpusb_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
   zend_declare_property_long(ConfigDescriptor_ce_ptr, PROP_NAME("wTotalLength"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
   zend_declare_property_long(ConfigDescriptor_ce_ptr, PROP_NAME("bNumInterfaces"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
   zend_declare_property_long(ConfigDescriptor_ce_ptr, PROP_NAME("bConfigurationValue"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
@@ -337,7 +351,7 @@ static void class_init_InterfaceDescriptor(TSRMLS_D)
 {
   zend_class_entry ce;
   INIT_NS_CLASS_ENTRY(ce, USB_NS, "InterfaceDescriptor", InterfaceDescriptor_methods);
-  InterfaceDescriptor_ce_ptr = zend_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
+  InterfaceDescriptor_ce_ptr = phpusb_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
   zend_declare_property_long(InterfaceDescriptor_ce_ptr, PROP_NAME("bInterfaceNumber"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
   zend_declare_property_long(InterfaceDescriptor_ce_ptr, PROP_NAME("bAlternateSetting"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
   zend_declare_property_long(InterfaceDescriptor_ce_ptr, PROP_NAME("bNumEndpoints"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
@@ -359,7 +373,7 @@ static void class_init_EndpointDescriptor(TSRMLS_D)
 {
   zend_class_entry ce;
   INIT_NS_CLASS_ENTRY(ce, USB_NS, "EndpointDescriptor", EndpointDescriptor_methods);
-  EndpointDescriptor_ce_ptr = zend_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
+  EndpointDescriptor_ce_ptr = phpusb_register_internal_class_ex(&ce, Descriptor_ce_ptr, NULL TSRMLS_CC);
   zend_declare_property_long(EndpointDescriptor_ce_ptr, PROP_NAME("bEndpointAddress"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
   zend_declare_property_long(EndpointDescriptor_ce_ptr, PROP_NAME("bmAttributes"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);
   zend_declare_property_long(EndpointDescriptor_ce_ptr, PROP_NAME("wMaxPacketSize"), 0, ZEND_ACC_PUBLIC TSRMLS_CC);

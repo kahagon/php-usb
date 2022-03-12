@@ -75,7 +75,7 @@ extern int le_usb_interface;
 extern int le_usb_config_descriptor;
 
 void store_device_descriptor_to_zval(const struct libusb_device_descriptor *res_device_descriptor, zval * device_descriptor, INTERNAL_FUNCTION_PARAMETERS);
-void store_config_descriptor_to_zval(const struct libusb_config_descriptor *res_config_descriptor, zval * config_descriptor, INTERNAL_FUNCTION_PARAMETERS);
+//void store_config_descriptor_to_zval(const struct libusb_config_descriptor *res_config_descriptor, zval * config_descriptor, INTERNAL_FUNCTION_PARAMETERS);
 
 #define FREE_RESOURCE(resource) zend_list_delete(Z_LVAL_P(resource))
 
@@ -90,6 +90,27 @@ void store_config_descriptor_to_zval(const struct libusb_config_descriptor *res_
 #define PROP_SET_STRING(name, s) zend_update_property_string(_this_ce, _this_zval, #name, strlen(#name), s TSRMLS_CC)
 #define PROP_SET_STRINGL(name, s, l) zend_update_property_stringl(_this_ce, _this_zval, #name, strlen(#name), s, l TSRMLS_CC)
 
+#if PHP_VERSION_ID < 70000
+#define phpusb_resource zend_rsrc_list_entry
+#define phpusb_fetch_resource(rsrc, rsrc_type, instance, default_id, resource_type_name, resource_type) \
+		ZEND_FETCH_RESOURCE(rsrc, rsrc_type, &instance, default_id, resource_type_name, resource_type)
+#define phpusb_register_internal_class_ex(ce, parent_ce, parent_name) \
+		zend_register_internal_class_ex(ce, parent_ce, parent_name TSRMLS_CC)
+#define PHPUSB_RES_P(zval_p) Z_RESVAL_P(zval_p)
+
+int phpusb_register_resource(zval *rsrc_result, void *rsrc_pointer, int rsrc_type TSRMLS_DC);
+#else
+#define phpusb_resource zend_resource
+#define phpusb_fetch_resource(rsrc, rsrc_type, instance, default_id, resource_type_name, resource_type) \
+		if ((rsrc = (rsrc_type)zend_fetch_resource(Z_RES_P(instance), resource_type_name, resource_type)) == NULL) { \
+			RETURN_FALSE; \
+        }
+#define phpusb_register_internal_class_ex(ce, parent_ce, parent_name) \
+		zend_register_internal_class_ex(ce, parent_ce TSRMLS_CC)
+#define PHPUSB_RES_P(zval_p) Z_RES_P(zval_p)
+
+zend_resource * phpusb_register_resource(zval* rsrc_result, void *rsrc_pointer, int rsrc_type TSRMLS_DC);
+#endif
 
 PHP_FUNCTION(usb_init);
 #if (PHP_MAJOR_VERSION >= 5)

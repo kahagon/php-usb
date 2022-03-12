@@ -68,7 +68,8 @@ if test "$PHP_USB" != "no"; then
 
   PHP_SUBST(USB_SHARED_LIBADD)
 
-  PHP_NEW_EXTENSION(usb, usb.c usb_descriptor.c usb_device.c usb_misc.c usb_syncio.c, $ext_shared)
+dnl  PHP_NEW_EXTENSION(usb, usb.c usb_descriptor.c usb_device.c usb_misc.c usb_syncio.c, $ext_shared)
+  PHP_NEW_EXTENSION(usb, usb.c usb_descriptor.c usb_device.c, $ext_shared)
 
 fi
 
