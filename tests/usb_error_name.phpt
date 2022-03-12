@@ -2,7 +2,7 @@
 usb_error_name() function
 --SKIPIF--
 <?php 
-
+die('skip test is not implemented.');
 if(!extension_loaded('usb')) die('skip ');
 
  ?>

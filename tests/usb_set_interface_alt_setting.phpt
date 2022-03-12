@@ -2,7 +2,7 @@
 usb_set_interface_alt_setting() function
 --SKIPIF--
 <?php 
-
+die('skip test is not implemented.');
 if(!extension_loaded('usb')) die('skip ');
 
  ?>

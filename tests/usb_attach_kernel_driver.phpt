@@ -2,7 +2,7 @@
 usb_attach_kernel_driver() function
 --SKIPIF--
 <?php 
-
+die('skip test is not implemented.');
 if(!extension_loaded('usb')) die('skip ');
 
  ?>

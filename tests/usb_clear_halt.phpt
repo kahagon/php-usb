@@ -2,7 +2,7 @@
 usb_clear_halt() function
 --SKIPIF--
 <?php 
-
+die('skip test is not implemented.');
 if(!extension_loaded('usb')) die('skip ');
 
  ?>

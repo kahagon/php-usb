@@ -2,7 +2,7 @@
 usb_get_config_descriptor_by_value() function
 --SKIPIF--
 <?php 
-
+die('skip test is not implemented.');
 if(!extension_loaded('usb')) die('skip ');
 
  ?>
