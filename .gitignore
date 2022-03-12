@@ -15,6 +15,7 @@ config.status
 config.sub
 config.guess
 configure
+configure*
 configure.in
 install-sh
 iltmain.sh
@@ -35,3 +36,10 @@ ltmain.sh
 *.la
 tmp-php.ini
 php_test_results*
+
+tests/*.diff
+tests/*.exp
+tests/*.log
+tests/*.php
+tests/*.sh
+tests/*.out
