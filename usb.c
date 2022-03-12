@@ -23,11 +23,22 @@ int phpusb_register_resource(zval *rsrc_result, void *rsrc_pointer, int rsrc_typ
 	ZVAL_RESOURCE(rsrc_result, rsrc_pointer);
 	return ZEND_REGISTER_RESOURCE(rsrc_result, rsrc_pointer, rsrc_type);
 }
+zval* phpusb_hash_get_current_data_ex(HashTable *ht, HashPosition *pos) {
+	zval **data;
+	if (zend_hash_get_current_data_ex(ht, (void**) &data, pos) != SUCCESS) {
+		return NULL;
+	} else {
+		return *data;
+	}
+}
 #else
 zend_resource * phpusb_register_resource(zval* rsrc_result, void *rsrc_pointer, int rsrc_type TSRMLS_DC) {
 	zend_resource * r = zend_register_resource(rsrc_pointer, rsrc_type);
 	ZVAL_RES(rsrc_result, r);
 	return Z_RES_P(rsrc_result);
+}
+zval* phpusb_hash_get_current_data_ex(HashTable *ht, HashPosition *pos) {
+	return zend_hash_get_current_data_ex(ht, pos);
 }
 #endif
 
@@ -112,7 +123,7 @@ zend_function_entry usb_functions[] = {
 	PHP_FE(usb_init            , usb_init_arg_info)
 	PHP_FE(usb_exit            , usb_exit_arg_info)
 	PHP_FE(usb_get_device_list , usb_get_device_list_arg_info)
-//	PHP_FE(usb_free_device_list, usb_free_device_list_arg_info)
+	PHP_FE(usb_free_device_list, usb_free_device_list_arg_info)
 //	PHP_FE(usb_open            , usb_open_arg_info)
 //	PHP_FE(usb_close           , usb_close_arg_info)
 //	PHP_FE(usb_get_bus_number  , usb_get_bus_number_arg_info)

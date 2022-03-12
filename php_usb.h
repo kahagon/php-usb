@@ -93,7 +93,7 @@ void store_device_descriptor_to_zval(const struct libusb_device_descriptor *res_
 #if PHP_VERSION_ID < 70000
 #define phpusb_resource zend_rsrc_list_entry
 #define phpusb_fetch_resource(rsrc, rsrc_type, instance, default_id, resource_type_name, resource_type) \
-		ZEND_FETCH_RESOURCE(rsrc, rsrc_type, &instance, default_id, resource_type_name, resource_type)
+		ZEND_FETCH_RESOURCE(rsrc, rsrc_type, &(instance), default_id, resource_type_name, resource_type)
 #define phpusb_register_internal_class_ex(ce, parent_ce, parent_name) \
 		zend_register_internal_class_ex(ce, parent_ce, parent_name TSRMLS_CC)
 #define PHPUSB_RES_P(zval_p) Z_RESVAL_P(zval_p)
@@ -111,6 +111,8 @@ int phpusb_register_resource(zval *rsrc_result, void *rsrc_pointer, int rsrc_typ
 
 zend_resource * phpusb_register_resource(zval* rsrc_result, void *rsrc_pointer, int rsrc_type TSRMLS_DC);
 #endif
+
+zval* phpusb_hash_get_current_data_ex(HashTable *ht, HashPosition *pos);
 
 PHP_FUNCTION(usb_init);
 #if (PHP_MAJOR_VERSION >= 5)
