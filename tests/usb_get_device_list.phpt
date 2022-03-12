@@ -22,8 +22,6 @@ if (1 > usb_get_device_list($context, $devices)) {
 var_dump($devices[0]);
 
 out:
-if ($devices) usb_free_device_list($devices);
-if ($context) usb_exit($context);
 ?>
 --EXPECTF--
 resource(%d) of type (usb_device)
