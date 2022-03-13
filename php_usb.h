@@ -65,6 +65,12 @@ PHP_MINFO_FUNCTION(usb);
 #define PROP_NAME(name) name, strlen(name)
 #define USB_NS "USB"
 
+typedef struct libusb_config_descriptor libusb_config_descriptor;
+typedef struct libusb_device_descriptor libusb_device_descriptor;
+typedef struct libusb_interface libusb_interface;
+typedef struct libusb_interface_descriptor libusb_interface_descriptor;
+typedef struct libusb_endpoint_descriptor libusb_endpoint_descriptor;
+
 extern int le_usb_context;
 extern int le_usb_device;
 extern int le_usb_device_handle;
@@ -73,6 +79,13 @@ extern int le_usb_endpoint_descriptor;
 extern int le_usb_interface_descriptor;
 extern int le_usb_interface;
 extern int le_usb_config_descriptor;
+
+extern zend_class_entry * Descriptor_ce_ptr;
+extern zend_class_entry * DeviceDescriptor_ce_ptr;
+extern zend_class_entry * ConfigDescriptor_ce_ptr;
+extern zend_class_entry * InterfaceAltsetting_ce_ptr;
+extern zend_class_entry * InterfaceDescriptor_ce_ptr;
+extern zend_class_entry * EndpointDescriptor_ce_ptr;
 
 void store_device_descriptor_to_zval(const struct libusb_device_descriptor *res_device_descriptor, zval * device_descriptor, INTERNAL_FUNCTION_PARAMETERS);
 //void store_config_descriptor_to_zval(const struct libusb_config_descriptor *res_config_descriptor, zval * config_descriptor, INTERNAL_FUNCTION_PARAMETERS);
@@ -112,7 +125,8 @@ int phpusb_register_resource(zval *rsrc_result, void *rsrc_pointer, int rsrc_typ
 zend_resource * phpusb_register_resource(zval* rsrc_result, void *rsrc_pointer, int rsrc_type TSRMLS_DC);
 #endif
 
-zval* phpusb_hash_get_current_data_ex(HashTable *ht, HashPosition *pos);
+zval *phpusb_hash_get_current_data_ex(HashTable *ht, HashPosition *pos);
+zval *phpusb_read_property(zend_class_entry *scope, zval *object, const char *name, size_t name_length, zend_bool silent);
 
 PHP_FUNCTION(usb_init);
 #if (PHP_MAJOR_VERSION >= 5)
@@ -524,6 +538,17 @@ ZEND_END_ARG_INFO()
 #else /* PHP 4.x */
 #define usb_interrupt_transfer_arg_info NULL
 #endif
+		
+PHP_METHOD(ConfigDescriptor, __construct);
+#if (PHP_MAJOR_VERSION >= 5)
+ZEND_BEGIN_ARG_INFO_EX(ConfigDescriptor___construct_arg_info, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 1)
+	ZEND_ARG_INFO(0, device)
+ZEND_END_ARG_INFO()
+#else /* PHP 4.x */
+#define SerialPort____construct_args NULL
+#endif
+		
+		
 
 #ifdef  __cplusplus
 } // extern "C" 
