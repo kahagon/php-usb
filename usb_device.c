@@ -5,20 +5,20 @@
 PHP_FUNCTION(usb_init)
 {
 
-	zval * context = NULL;
+	zval * zval_resource_context = NULL;
 	int context_id = -1;
-	libusb_context * res_context;
+	libusb_context * libusb_resource_context;
 	int result = LIBUSB_SUCCESS;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z/", &context) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z/", &zval_resource_context) == FAILURE) {
 		return;
 	}
-	if (Z_TYPE_P(context) == IS_RESOURCE) {
-		phpusb_fetch_resource(res_context, libusb_context *, context, context_id, "usb_context", le_usb_context);
+	if (Z_TYPE_P(zval_resource_context) == IS_RESOURCE) {
+		phpusb_fetch_resource(libusb_resource_context, libusb_context *, zval_resource_context, context_id, "usb_context", le_usb_context);
 	}
 
-	result = libusb_init(&res_context);
-	phpusb_register_resource(context, res_context, le_usb_context);
+	result = libusb_init(&libusb_resource_context);
+	phpusb_register_resource(zval_resource_context, libusb_resource_context, le_usb_context);
 
 	RETURN_LONG(result);
 }
@@ -29,18 +29,18 @@ PHP_FUNCTION(usb_init)
    */
 PHP_FUNCTION(usb_exit)
 {
-	zval * context = NULL;
+	zval * zval_resource_context = NULL;
 	int context_id = -1;
-	libusb_context * res_context;
+	libusb_context * libusb_resource_context;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &context) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zval_resource_context) == FAILURE) {
 		return;
 	}
 	
-	phpusb_fetch_resource(res_context, libusb_context *, context, context_id, "usb_context", le_usb_context);
-	libusb_exit(res_context);
+	phpusb_fetch_resource(libusb_resource_context, libusb_context *, zval_resource_context, context_id, "usb_context", le_usb_context);
+	libusb_exit(libusb_resource_context);
 	
-	zend_list_delete(PHPUSB_RES_P(context));
+	zend_list_delete(PHPUSB_RES_P(zval_resource_context));
 }
 /* }}} usb_exit */
 
@@ -49,33 +49,33 @@ PHP_FUNCTION(usb_exit)
    */
 PHP_FUNCTION(usb_get_device_list)
 {
-	zval * context = NULL;
+	zval * zval_resource_context = NULL;
 	int context_id = -1;
-	libusb_context * res_context;
+	libusb_context * libusb_resource_context;
 
-	zval * device_list = NULL;
+	zval * zval_array_devices = NULL;
 	int i = 0;
 	ssize_t len;
-	libusb_device **devices;
+	libusb_device **libusb_resource_devices;
 
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rz/", &context, &device_list) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rz/", &zval_resource_context, &zval_array_devices) == FAILURE) {
 		return;
 	}
-	phpusb_fetch_resource(res_context, libusb_context *, context, context_id, "usb_context", le_usb_context);
+	phpusb_fetch_resource(libusb_resource_context, libusb_context *, zval_resource_context, context_id, "usb_context", le_usb_context);
 	
-	array_init(device_list);
+	array_init(zval_array_devices);
 	
-	len = libusb_get_device_list(res_context, &devices);
+	len = libusb_get_device_list(libusb_resource_context, &libusb_resource_devices);
 	if (len >= 0) {
 		for (i = 0; i < len; i++) {
-			zval zval_device;
-			libusb_device *device = devices[i];
-			add_next_index_resource(device_list, phpusb_register_resource(&zval_device, device, le_usb_device));
+			zval zval_resource_device;
+			libusb_device *libusb_resource_device = libusb_resource_devices[i];
+			add_next_index_resource(zval_array_devices, phpusb_register_resource(&zval_resource_device, libusb_resource_device, le_usb_device));
 		}
 	}
 	
-	free(devices);
+	free(libusb_resource_devices);
 	RETURN_LONG(len);
 }
 /* }}} usb_get_device_list */
@@ -84,32 +84,31 @@ PHP_FUNCTION(usb_get_device_list)
    */
 PHP_FUNCTION(usb_free_device_list)
 {
-
-	zval * device_list;
-	zval *data;
+	zval * zval_array_devices;
 	HashTable * device_list_hash;
 	HashPosition pointer;
 	int device_list_count = -1;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a/", &device_list) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a/", &zval_array_devices) == FAILURE) {
 		return;
 	}
-	device_list_hash = Z_ARRVAL_P(device_list);
+	device_list_hash = Z_ARRVAL_P(zval_array_devices);
 	device_list_count = zend_hash_num_elements(device_list_hash);
 	
     zend_hash_internal_pointer_reset_ex(device_list_hash, &pointer);
     for(;; zend_hash_move_forward_ex(device_list_hash, &pointer)) 
     {
-        if (NULL == (data = phpusb_hash_get_current_data_ex(device_list_hash, &pointer))) {
+		zval * zval_resource_device;
+        if (NULL == (zval_resource_device = phpusb_hash_get_current_data_ex(device_list_hash, &pointer))) {
             break;
         }
 
-        libusb_device * res_device;
+        libusb_device * libusb_resource_device;
         int device_id = -1;
         		
-        phpusb_fetch_resource(res_device, libusb_device *, data, device_id, "usb_device", le_usb_device);
-        libusb_unref_device(res_device);
-        zend_list_delete(PHPUSB_RES_P(data));
+        phpusb_fetch_resource(libusb_resource_device, libusb_device *, zval_resource_device, device_id, "usb_device", le_usb_device);
+        libusb_unref_device(libusb_resource_device);
+        zend_list_delete(PHPUSB_RES_P(zval_resource_device));
     }
 }
 /* }}} usb_free_device_list */

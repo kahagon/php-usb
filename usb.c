@@ -204,9 +204,6 @@ void store_device_descriptor_to_zval(const struct libusb_device_descriptor *res_
 
 void store_config_descriptor_to_zval(const struct libusb_config_descriptor *res_config_descriptor, zval * config_descriptor, INTERNAL_FUNCTION_PARAMETERS) {
 	int i = 0;
-//	zend_object_release();
-//	zend_objects_new();
-//	zend_object_store_set_object();
 	object_init_ex(config_descriptor, ConfigDescriptor_ce_ptr);
 	zval *interface_array = phpusb_read_property(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("interface"), 0);
 	array_init_size(interface_array, res_config_descriptor->bNumInterfaces);
@@ -219,7 +216,6 @@ void store_config_descriptor_to_zval(const struct libusb_config_descriptor *res_
 	zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("iConfiguration"), res_config_descriptor->iConfiguration TSRMLS_CC);
 	zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("bmAttributes"), res_config_descriptor->bmAttributes TSRMLS_CC);
 	zend_update_property_long(ConfigDescriptor_ce_ptr, config_descriptor, PROP_NAME("MaxPower"), res_config_descriptor->MaxPower TSRMLS_CC);
-	
 	
 	for (i = 0; i < res_config_descriptor->bNumInterfaces; i++) {
 		const struct libusb_interface res_interface = res_config_descriptor->interface[i];
@@ -296,34 +292,34 @@ PHP_METHOD(ConfigDescriptor, __construct)
     zend_class_entry * _this_ce;
     zval * _this_zval;
 
-	zval * config_descriptor = NULL;
+	zval * zval_resource_config_descriptor = NULL;
 	int config_descriptor_id = -1;
-	libusb_config_descriptor *res_config_descriptor;
+	libusb_config_descriptor *libusb_resource_config_descriptor;
 	
     _this_zval = getThis();
     _this_ce = Z_OBJCE_P(_this_zval);
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &config_descriptor) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zval_resource_config_descriptor) == FAILURE) {
 		return;
 	}
-	phpusb_fetch_resource(res_config_descriptor, libusb_device *, config_descriptor, config_descriptor_id, "usb_config_descriptor", le_usb_config_descriptor);
+	phpusb_fetch_resource(libusb_resource_config_descriptor, libusb_device *, zval_resource_config_descriptor, config_descriptor_id, "usb_config_descriptor", le_usb_config_descriptor);
 
 	int i = 0;
 	zval *interface_array = phpusb_read_property(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("interface"), 0);
-	array_init_size(interface_array, res_config_descriptor->bNumInterfaces);
+	array_init_size(interface_array, libusb_resource_config_descriptor->bNumInterfaces);
 
-	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("bLength"), res_config_descriptor->bLength TSRMLS_CC);
-	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("bDescriptorType"), res_config_descriptor->bDescriptorType TSRMLS_CC);
-	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("wTotalLength"), res_config_descriptor->wTotalLength TSRMLS_CC);
-	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("bNumInterfaces"), res_config_descriptor->bNumInterfaces TSRMLS_CC);
-	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("bConfigurationValue"), res_config_descriptor->bConfigurationValue TSRMLS_CC);
-	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("iConfiguration"), res_config_descriptor->iConfiguration TSRMLS_CC);
-	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("bmAttributes"), res_config_descriptor->bmAttributes TSRMLS_CC);
-	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("MaxPower"), res_config_descriptor->MaxPower TSRMLS_CC);
+	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("bLength"), libusb_resource_config_descriptor->bLength TSRMLS_CC);
+	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("bDescriptorType"), libusb_resource_config_descriptor->bDescriptorType TSRMLS_CC);
+	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("wTotalLength"), libusb_resource_config_descriptor->wTotalLength TSRMLS_CC);
+	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("bNumInterfaces"), libusb_resource_config_descriptor->bNumInterfaces TSRMLS_CC);
+	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("bConfigurationValue"), libusb_resource_config_descriptor->bConfigurationValue TSRMLS_CC);
+	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("iConfiguration"), libusb_resource_config_descriptor->iConfiguration TSRMLS_CC);
+	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("bmAttributes"), libusb_resource_config_descriptor->bmAttributes TSRMLS_CC);
+	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("MaxPower"), libusb_resource_config_descriptor->MaxPower TSRMLS_CC);
 	
 	/*
-	for (i = 0; i < res_config_descriptor->bNumInterfaces; i++) {
-		const struct libusb_interface res_interface = res_config_descriptor->interface[i];
+	for (i = 0; i < libusb_resource_config_descriptor->bNumInterfaces; i++) {
+		const struct libusb_interface res_interface = libusb_resource_config_descriptor->interface[i];
 		// TODO: ref counting
 		zval* interface = emalloc(sizeof(zval));
 //		zend_objects_new(InterfaceAltsetting_ce_ptr);
@@ -388,19 +384,17 @@ PHP_METHOD(ConfigDescriptor, __construct)
 	}
 	//*/
 	zend_update_property(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("interface"), interface_array TSRMLS_CC);
-	zend_update_property_stringl(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("extra"), res_config_descriptor->extra, res_config_descriptor->extra_length TSRMLS_CC);
-	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("extra_length"), res_config_descriptor->extra_length TSRMLS_CC);
+	zend_update_property_stringl(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("extra"), libusb_resource_config_descriptor->extra, libusb_resource_config_descriptor->extra_length TSRMLS_CC);
+	zend_update_property_long(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("extra_length"), libusb_resource_config_descriptor->extra_length TSRMLS_CC);
 	
-	
-	
-	libusb_free_config_descriptor(res_config_descriptor);
+	libusb_free_config_descriptor(libusb_resource_config_descriptor);
 }
 /* }}} __construct */
 
 
 /* {{{ proto void __destruct()
    */
-PHP_METHOD(SerialPort, __destruct)
+PHP_METHOD(ConfigDescriptor, __destruct)
 {
     zend_class_entry * _this_ce;
     zval * _this_zval = NULL;
@@ -410,9 +404,6 @@ PHP_METHOD(SerialPort, __destruct)
     }
 
     _this_ce = Z_OBJCE_P(_this_zval);
-//    if (SerialPort_isOpen_impl(GORILLA_METHOD_PARAM_PASSTHRU)) {
-//        SerialPort_close_impl(GORILLA_METHOD_PARAM_PASSTHRU);
-//    }
 }
 /* }}} __destruct */
 
