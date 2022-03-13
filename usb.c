@@ -40,6 +40,10 @@ zval *phpusb_read_property(zend_class_entry *scope, zval *object, const char *na
 	}
 	return zv;
 }
+
+int phpusb_call_user_func(zval *object, zval *function_name, zval *retval_ptr, zend_uint param_count, zval params[]) {
+	return call_user_function(EG(function_table), &object, function_name, retval_ptr, param_count, &params);
+}
 #else
 zend_resource * phpusb_register_resource(zval* rsrc_result, void *rsrc_pointer, int rsrc_type TSRMLS_DC) {
 	zend_resource * r = zend_register_resource(rsrc_pointer, rsrc_type);
@@ -52,6 +56,9 @@ zval* phpusb_hash_get_current_data_ex(HashTable *ht, HashPosition *pos) {
 zval *phpusb_read_property(zend_class_entry *scope, zval *object, const char *name, size_t name_length, zend_bool silent) {
 	zval rv;
 	return zend_read_property(scope, object, name, name_length, silent, &rv);
+}
+int phpusb_call_user_func(zval *object, zval *function_name, zval *retval_ptr, uint32_t param_count, zval params[]) {
+	return call_user_function(EG(function_table), object, function_name, retval_ptr, param_count, params);
 }
 #endif
 

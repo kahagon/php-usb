@@ -109,9 +109,13 @@ void store_device_descriptor_to_zval(const struct libusb_device_descriptor *res_
 		ZEND_FETCH_RESOURCE(rsrc, rsrc_type, &(instance), -1, resource_type_name, resource_type)
 #define phpusb_register_internal_class_ex(ce, parent_ce, parent_name) \
 		zend_register_internal_class_ex(ce, parent_ce, parent_name TSRMLS_CC)
+//#define phpusb_call_user_func(zval_obj_p, func_name, retval_p, param_count, params) \
+//		call_user_function(EG(function_table), &(zval_obj_p), func_name, retval_p, param_count, params)
 #define PHPUSB_RES_P(zval_p) Z_RESVAL_P(zval_p)
+#define PHPUSB_STRING(z, s) ZVAL_STRING(z, s, 1)
 
 int phpusb_register_resource(zval *rsrc_result, void *rsrc_pointer, int rsrc_type TSRMLS_DC);
+int phpusb_call_user_func(zval *object, zval *function_name, zval *retval_ptr, zend_uint param_count, zval params[]);
 #else
 #define phpusb_resource zend_resource
 #define phpusb_fetch_resource(rsrc, rsrc_type, instance, resource_type_name, resource_type) \
@@ -120,9 +124,13 @@ int phpusb_register_resource(zval *rsrc_result, void *rsrc_pointer, int rsrc_typ
         }
 #define phpusb_register_internal_class_ex(ce, parent_ce, parent_name) \
 		zend_register_internal_class_ex(ce, parent_ce TSRMLS_CC)
+//#define phpusb_call_user_func(zval_obj_p, func_name, retval_p, param_count, params) \
+		call_user_function(EG(function_table), zval_obj_p, func_name, retval_p, param_count, params)
 #define PHPUSB_RES_P(zval_p) Z_RES_P(zval_p)
+#define PHPUSB_STRING(z, s) ZVAL_STRING(z, s)
 
 zend_resource * phpusb_register_resource(zval* rsrc_result, void *rsrc_pointer, int rsrc_type TSRMLS_DC);
+int phpusb_call_user_func(zval *object, zval *function_name, zval *retval_ptr, uint32_t param_count, zval params[]);
 #endif
 
 zval *phpusb_hash_get_current_data_ex(HashTable *ht, HashPosition *pos);

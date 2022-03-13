@@ -52,15 +52,12 @@ PHP_FUNCTION(usb_get_active_config_descriptor)
 	
 	zval constructor_method_name;
 	zval constructor_ret_val;
-	zval *params[1];
-	INIT_ZVAL(constructor_method_name);
-	ZVAL_STRING(&constructor_method_name, ZEND_CONSTRUCTOR_FUNC_NAME, 1);
-	params[0] = &zval_resource_config_descriptor;
+	PHPUSB_STRING(&constructor_method_name, ZEND_CONSTRUCTOR_FUNC_NAME);
+	zval params[1];
+	params[0] = zval_resource_config_descriptor;
 	object_init_ex(zval_object_config_descriptor, ConfigDescriptor_ce_ptr);
-	call_user_function(EG(function_table), &zval_object_config_descriptor, &constructor_method_name, (zval *)&constructor_ret_val, 1, params TSRMLS_CC);
+	phpusb_call_user_func(zval_object_config_descriptor, &constructor_method_name, (zval *)&constructor_ret_val, 1, params TSRMLS_CC);
 
-
-	
 	RETURN_LONG(0);
 }
 /* }}} usb_get_active_config_descriptor */
