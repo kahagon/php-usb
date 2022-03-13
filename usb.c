@@ -293,7 +293,6 @@ PHP_METHOD(ConfigDescriptor, __construct)
     zval * _this_zval;
 
 	zval * zval_resource_config_descriptor = NULL;
-	int config_descriptor_id = -1;
 	libusb_config_descriptor *libusb_resource_config_descriptor;
 	
     _this_zval = getThis();
@@ -302,7 +301,7 @@ PHP_METHOD(ConfigDescriptor, __construct)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zval_resource_config_descriptor) == FAILURE) {
 		return;
 	}
-	phpusb_fetch_resource(libusb_resource_config_descriptor, libusb_device *, zval_resource_config_descriptor, config_descriptor_id, "usb_config_descriptor", le_usb_config_descriptor);
+	phpusb_fetch_resource(libusb_resource_config_descriptor, libusb_device *, zval_resource_config_descriptor, "usb_config_descriptor", le_usb_config_descriptor);
 
 	int i = 0;
 	zval *interface_array = phpusb_read_property(ConfigDescriptor_ce_ptr, _this_zval, PROP_NAME("interface"), 0);

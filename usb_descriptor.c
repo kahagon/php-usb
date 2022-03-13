@@ -5,7 +5,6 @@
 PHP_FUNCTION(usb_get_device_descriptor)
 {
 	zval * zval_resource_device = NULL;
-	int device_id = -1;
 	libusb_device * libusb_resource_device;
 
 	zval * zval_object_device_descriptor = NULL;
@@ -16,7 +15,7 @@ PHP_FUNCTION(usb_get_device_descriptor)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rz/", &zval_resource_device, &zval_object_device_descriptor) == FAILURE) {
 		return;
 	}
-	phpusb_fetch_resource(libusb_resource_device, libusb_device *, zval_resource_device, device_id, "usb_device", le_usb_device);
+	phpusb_fetch_resource(libusb_resource_device, libusb_device *, zval_resource_device, "usb_device", le_usb_device);
 
 	result = libusb_get_device_descriptor(libusb_resource_device, &libusb_resource_device_descriptor);
 	if (result == LIBUSB_SUCCESS) {
@@ -32,7 +31,6 @@ PHP_FUNCTION(usb_get_device_descriptor)
 PHP_FUNCTION(usb_get_active_config_descriptor)
 {
 	zval * zval_resource_device = NULL;
-	int device_id = -1;
 	libusb_device * libusb_resource_device;
 
 	zval * zval_object_config_descriptor = NULL;
@@ -41,7 +39,7 @@ PHP_FUNCTION(usb_get_active_config_descriptor)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rz/", &zval_resource_device, &zval_object_config_descriptor) == FAILURE) {
 		return;
 	}
-	phpusb_fetch_resource(libusb_resource_device, libusb_device *, zval_resource_device, device_id, "usb_device", le_usb_device);	
+	phpusb_fetch_resource(libusb_resource_device, libusb_device *, zval_resource_device, "usb_device", le_usb_device);	
 
 	int result = libusb_get_active_config_descriptor(libusb_resource_device, &libusb_resource_config_descriptor);
 	if (result != LIBUSB_SUCCESS) {

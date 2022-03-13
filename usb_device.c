@@ -6,7 +6,6 @@ PHP_FUNCTION(usb_init)
 {
 
 	zval * zval_resource_context = NULL;
-	int context_id = -1;
 	libusb_context * libusb_resource_context;
 	int result = LIBUSB_SUCCESS;
 
@@ -14,7 +13,7 @@ PHP_FUNCTION(usb_init)
 		return;
 	}
 	if (Z_TYPE_P(zval_resource_context) == IS_RESOURCE) {
-		phpusb_fetch_resource(libusb_resource_context, libusb_context *, zval_resource_context, context_id, "usb_context", le_usb_context);
+		phpusb_fetch_resource(libusb_resource_context, libusb_context *, zval_resource_context, "usb_context", le_usb_context);
 	}
 
 	result = libusb_init(&libusb_resource_context);
@@ -30,14 +29,13 @@ PHP_FUNCTION(usb_init)
 PHP_FUNCTION(usb_exit)
 {
 	zval * zval_resource_context = NULL;
-	int context_id = -1;
 	libusb_context * libusb_resource_context;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zval_resource_context) == FAILURE) {
 		return;
 	}
 	
-	phpusb_fetch_resource(libusb_resource_context, libusb_context *, zval_resource_context, context_id, "usb_context", le_usb_context);
+	phpusb_fetch_resource(libusb_resource_context, libusb_context *, zval_resource_context, "usb_context", le_usb_context);
 	libusb_exit(libusb_resource_context);
 	
 	zend_list_delete(PHPUSB_RES_P(zval_resource_context));
@@ -50,7 +48,6 @@ PHP_FUNCTION(usb_exit)
 PHP_FUNCTION(usb_get_device_list)
 {
 	zval * zval_resource_context = NULL;
-	int context_id = -1;
 	libusb_context * libusb_resource_context;
 
 	zval * zval_array_devices = NULL;
@@ -62,7 +59,7 @@ PHP_FUNCTION(usb_get_device_list)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rz/", &zval_resource_context, &zval_array_devices) == FAILURE) {
 		return;
 	}
-	phpusb_fetch_resource(libusb_resource_context, libusb_context *, zval_resource_context, context_id, "usb_context", le_usb_context);
+	phpusb_fetch_resource(libusb_resource_context, libusb_context *, zval_resource_context, "usb_context", le_usb_context);
 	
 	array_init(zval_array_devices);
 	
@@ -104,9 +101,8 @@ PHP_FUNCTION(usb_free_device_list)
         }
 
         libusb_device * libusb_resource_device;
-        int device_id = -1;
-        		
-        phpusb_fetch_resource(libusb_resource_device, libusb_device *, zval_resource_device, device_id, "usb_device", le_usb_device);
+        
+        phpusb_fetch_resource(libusb_resource_device, libusb_device *, zval_resource_device, "usb_device", le_usb_device);
         libusb_unref_device(libusb_resource_device);
         zend_list_delete(PHPUSB_RES_P(zval_resource_device));
     }
